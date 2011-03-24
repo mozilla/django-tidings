@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from notifications.models import Watch, WatchFilter
+from tidings.models import Watch, WatchFilter
 
 
 class FilterInline(admin.TabularInline):

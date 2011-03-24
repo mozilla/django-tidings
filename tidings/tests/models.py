@@ -1,6 +1,6 @@
 from django.db import models
 
-from notifications.models import NotificationsMixin
+from tidings.models import NotificationsMixin
 
 
 # TODO: figure out why placing the mixin *after* models.Model fails

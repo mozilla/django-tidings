@@ -1,9 +1,9 @@
 from nose.tools import eq_
 
-from notifications.models import Watch
-from notifications.tasks import claim_watches
-from notifications.tests import watch
-from notifications.tests import TestCase
+from tidings.models import Watch
+from tidings.tasks import claim_watches
+from tidings.tests import watch
+from tidings.tests import TestCase
 from users.tests import user
 
 

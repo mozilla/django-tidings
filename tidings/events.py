@@ -9,8 +9,8 @@ from django.db.models import Q
 
 from celery.decorators import task
 
-from notifications.models import Watch, WatchFilter, EmailUser, multi_raw
-from notifications.utils import collate, hash_to_unsigned
+from tidings.models import Watch, WatchFilter, EmailUser, multi_raw
+from tidings.utils import collate, hash_to_unsigned
 
 
 class ActivationRequestFailed(Exception):
@@ -166,7 +166,7 @@ class Event(object):
             joins, wheres, join_params, where_params = [], [], [], []
             for n, (k, v) in enumerate(filters.iteritems()):
                 joins.append(
-                    'LEFT JOIN notifications_watchfilter f{n} '
+                    'LEFT JOIN tidings_watchfilter f{n} '
                     'ON f{n}.watch_id=w.id '
                         'AND f{n}.name=%s'.format(n=n))
                 join_params.append(k)
@@ -202,7 +202,7 @@ class Event(object):
 
         query = (
             'SELECT u.*, w.* '
-            'FROM notifications_watch w '
+            'FROM tidings_watch w '
             'LEFT JOIN auth_user u ON u.id=w.user_id {joins} '
             'WHERE {wheres} '
             'AND (length(w.email)>0 OR length(u.email)>0) '
@@ -256,9 +256,9 @@ class Event(object):
                 if object_id
                 else Q(),
             event_type=cls.event_type).extra(
-                where=['(SELECT count(*) FROM notifications_watchfilter WHERE '
-                       'notifications_watchfilter.watch_id='
-                       'notifications_watch.id)=%s'],
+                where=['(SELECT count(*) FROM tidings_watchfilter WHERE '
+                       'tidings_watchfilter.watch_id='
+                       'tidings_watch.id)=%s'],
                 params=[len(filters)])
         # Optimization: If the subselect ends up being slow, store the number
         # of filters in each Watch row or try a GROUP BY.
@@ -391,7 +391,7 @@ class Event(object):
             where the first element is the user to send to and the second is
             the watch that indicated the user's interest in this event
 
-        notifications.utils.emails_with_users_and_watches() can come in handy
+        tidings.utils.emails_with_users_and_watches() can come in handy
         for generating mails from Django templates.
 
         """
@@ -431,7 +431,7 @@ class Event(object):
 
         TODO: provide generic implementation of this before liberating.
         Generic implementation could involve a setting to the default reverse()
-        path, e.g. 'notifications.activate_watch'.
+        path, e.g. 'tidings.activate_watch'.
 
         """
         raise NotImplementedError

@@ -2,8 +2,8 @@ from django.conf import settings
 from django.core.management import call_command
 from django.db.models import loading
 
-from notifications.models import Watch, WatchFilter
-from notifications.utils import import_from_setting
+from tidings.models import Watch, WatchFilter
+from tidings.utils import import_from_setting
 from users.tests import user
 
 

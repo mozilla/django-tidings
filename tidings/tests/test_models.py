@@ -1,8 +1,8 @@
 from nose.tools import eq_
 
-from notifications.models import WatchFilter, EmailUser
-from notifications.tests import watch, watch_filter
-from notifications.tests import TestCase
+from tidings.models import WatchFilter, EmailUser
+from tidings.tests import watch, watch_filter
+from tidings.tests import TestCase
 
 
 # TODO: write a test to ensure that event types don't collide

@@ -1,6 +1,6 @@
 from celery.decorators import task
 
-from notifications.models import Watch
+from tidings.models import Watch
 
 
 @task(rate_limit='1/m')

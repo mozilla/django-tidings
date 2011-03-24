@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
 
-from notifications.utils import import_from_setting, reverse
+from tidings.utils import import_from_setting, reverse
 
 
 ModelBase = import_from_setting('NOTIFICATIONS_MODEL_BASE',
@@ -77,7 +77,7 @@ class Watch(ModelBase):
 
     def unsubscribe_url(self):
         """Return the absolute URL to visit to delete me."""
-        server_relative = ('%s?s=%s' % (reverse('notifications.unsubscribe',
+        server_relative = ('%s?s=%s' % (reverse('tidings.unsubscribe',
                                         args=[self.pk]),
                                         self.secret))
         return 'https://%s%s' % (Site.objects.get_current().domain,

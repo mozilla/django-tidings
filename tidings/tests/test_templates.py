@@ -1,8 +1,8 @@
 from nose.tools import eq_
 
-from notifications.models import Watch
-from notifications.tests import watch, TestCase
-from notifications.utils import reverse
+from tidings.models import Watch
+from tidings.tests import watch, TestCase
+from tidings.utils import reverse
 
 
 FAILURE_STRING = 'We could not find your subscription'
@@ -24,21 +24,21 @@ class UnsubscribeTests(TestCase):
         """Ensure the confirmation page renders if you feed it valid data."""
         w = watch(save=True)
         response = self.client.get(
-            reverse('notifications.unsubscribe', args=[w.pk])
+            reverse('tidings.unsubscribe', args=[w.pk])
             + '?s=' + w.secret)
         self.assertContains(response, 'Are you sure you want to unsubscribe?')
 
     def test_no_such_watch(self):
         """Assert it complains when asked for a nonexistent Watch."""
         for method in [self.client.get, self.client.post]:
-            response = method(reverse('notifications.unsubscribe', args=[33]))
+            response = method(reverse('tidings.unsubscribe', args=[33]))
             self.assertContains(response, FAILURE_STRING)
 
     def test_no_secret(self):
         """Assert it complains when no secret is given."""
         w = watch(save=True)
         for method in [self.client.get, self.client.post]:
-            response = method(reverse('notifications.unsubscribe',
+            response = method(reverse('tidings.unsubscribe',
                                       args=[w.pk]))
             self.assertContains(response, FAILURE_STRING)
 
@@ -47,7 +47,7 @@ class UnsubscribeTests(TestCase):
         w = watch(save=True)
         for method in [self.client.get, self.client.post]:
             response = method(
-                reverse('notifications.unsubscribe', args=[w.pk])
+                reverse('tidings.unsubscribe', args=[w.pk])
                         + '?s=WRONGwrong')
             self.assertContains(response, FAILURE_STRING)
 
@@ -55,7 +55,7 @@ class UnsubscribeTests(TestCase):
         """Ensure the watch deletes and view says "yay" when all goes well."""
         w = watch(save=True)
         response = self.client.post(
-            reverse('notifications.unsubscribe', args=[w.pk])
+            reverse('tidings.unsubscribe', args=[w.pk])
             + '?s=' + w.secret)
         self.assertContains(response, '<h1>Unsubscribed</h1>')
         eq_(0, Watch.objects.count())

@@ -4,8 +4,8 @@ from django.core.exceptions import ImproperlyConfigured
 from mock import patch
 from nose.tools import eq_, raises
 
-from notifications.tests import TestCase
-from notifications.utils import collate, import_from_setting
+from tidings.tests import TestCase
+from tidings.utils import collate, import_from_setting
 
 
 class MergeTests(TestCase):

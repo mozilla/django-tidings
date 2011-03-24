@@ -1,6 +1,6 @@
 import jingo
 
-from notifications.models import Watch
+from tidings.models import Watch
 
 
 def unsubscribe(request, watch_id):
@@ -13,10 +13,10 @@ def unsubscribe(request, watch_id):
         if secret != watch.secret:
             raise Watch.DoesNotExist
     except Watch.DoesNotExist:
-        return jingo.render(request, 'notifications/unsubscribe_error.html')
+        return jingo.render(request, 'tidings/unsubscribe_error.html')
 
     if request.method == 'POST':
         watch.delete()
-        return jingo.render(request, 'notifications/unsubscribe_success.html')
+        return jingo.render(request, 'tidings/unsubscribe_success.html')
 
-    return jingo.render(request, 'notifications/unsubscribe.html')
+    return jingo.render(request, 'tidings/unsubscribe.html')
