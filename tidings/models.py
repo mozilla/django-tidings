@@ -78,7 +78,7 @@ class Watch(ModelBase):
     def unsubscribe_url(self):
         """Return the absolute URL to visit to delete me."""
         server_relative = ('%s?s=%s' % (reverse('tidings.unsubscribe',
-                                        args=[self.pk]),
+                                                args=[self.pk]),
                                         self.secret))
         return 'https://%s%s' % (Site.objects.get_current().domain,
                                  server_relative)
