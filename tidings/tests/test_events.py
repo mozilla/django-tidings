@@ -13,8 +13,7 @@ from tidings.events import (Event, _unique_by_email, EventUnion,
 from tidings.models import Watch, EmailUser
 from tidings.tests import watch, watch_filter, ModelsTestCase
 from tidings.tests.models import MockModel
-from tidings.tests import TestCase
-from users.tests import user
+from tidings.tests import TestCase, user
 
 
 TYPE = 'some event'

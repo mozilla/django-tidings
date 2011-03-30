@@ -2,9 +2,7 @@ from nose.tools import eq_
 
 from tidings.models import Watch
 from tidings.tasks import claim_watches
-from tidings.tests import watch
-from tidings.tests import TestCase
-from users.tests import user
+from tidings.tests import watch, TestCase, user
 
 
 class ClaimWatchesTests(TestCase):
