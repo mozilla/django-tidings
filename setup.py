@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 setup(
     name='django-tidings',
     version='0.1',
-    description='Library for asynchronous email notifications from Django',
+    description='Framework for asynchronous email notifications from Django',
     long_description=open('README.rst').read(),
     author='Erik Rose',
     author_email='erik@mozilla.com',
@@ -20,6 +20,7 @@ setup(
     tests_require=[
         'fabric',
         'django_nose',
+        'djcelery',
         'mock'],
     classifiers = [
         'Environment :: Web Environment',

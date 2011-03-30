@@ -1,3 +1,4 @@
+import djcelery
 import os
 
 # Make filepaths relative to settings.
@@ -16,6 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites',
+    'djcelery',
     'tidings',
     'test_app'
 ]
@@ -33,6 +35,7 @@ TEMPLATE_DIRS = [
 ]
 
 # Celery
+djcelery.setup_loader()
 CELERY_ALWAYS_EAGER = True
 CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Explode loudly during tests.
 
