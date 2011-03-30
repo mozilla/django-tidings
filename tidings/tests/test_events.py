@@ -8,12 +8,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.mail import EmailMessage
 
-from tidings.events import (Event, _unique_by_email, EventUnion,
-                                  InstanceEvent)
+from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
-from tidings.tests import watch, watch_filter, ModelsTestCase
+from tidings.tests import watch, watch_filter, ModelsTestCase, TestCase, user
 from tidings.tests.models import MockModel
-from tidings.tests import TestCase, user
 
 
 TYPE = 'some event'

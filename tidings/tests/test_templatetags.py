@@ -1,7 +1,6 @@
 from django.template import Context, Template
 
-from tidings.tests import watch
-from tidings.tests import TestCase
+from tidings.tests import watch, TestCase
 
 
 class Tests(TestCase):
