@@ -232,6 +232,28 @@ For example...
 
   EditDocumentEvent.notify(request.user, document)
 
+With the help of :class:`~tidings.events.InstanceEvent`, this event can be
+implemented just by choosing an ``event_type`` and a ``content_type`` and,
+because we need Revision info in addition to Document info when we build the
+mails, override ``__init__()``::
+
+  class EditDocumentEvent(InstanceEvent):
+      """Event fired when a certain document is edited"""
+      event_type = 'wiki edit document'
+      content_type = Document
+  
+      def __init__(self, revision):
+          """This is another common pattern: we need to pass the Document to
+          InstanceEvent's constructor, but we also need to keep the new
+          Revision around so we can pull info from it when building our
+          mails."""
+          super(EditDocumentEvent, self).__init__(revision.document)
+          self.revision = revision
+  
+      def _mails(self, users_and_watches):
+          # ...
+
+For more detail, see the :class:`~tidings.events.InstanceEvent` documentation.
 
 
 De-duplication

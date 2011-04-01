@@ -465,7 +465,7 @@ class EventUnion(Event):
     # friends.
 
     def __init__(self, *events):
-        """``events`` -- the events of which to take the union"""
+        """:arg events: the events of which to take the union"""
         super(EventUnion, self).__init__()
         self.events = events
 
@@ -500,17 +500,19 @@ class EventUnion(Event):
 class InstanceEvent(Event):
     """Abstract superclass for watching a specific instance of a Model.
 
-    Subclasses should specify a content_type.
+    Subclasses must specify an ``event_type`` and should specify a
+    ``content_type``.
 
     """
 
     def __init__(self, instance, *args, **kwargs):
+        """:arg instance: the instance someone would have to be watching in order to be notified when this event is fired"""
         super(InstanceEvent, self).__init__(*args, **kwargs)
         self.instance = instance
 
     @classmethod
     def notify(cls, user_or_email, instance):
-        """Create, save, and return a Watch which fires when something
+        """Create, save, and return a watch which fires when something
         happens to ``instance``."""
         return super(InstanceEvent, cls).notify(user_or_email,
                                                 object_id=instance.pk)

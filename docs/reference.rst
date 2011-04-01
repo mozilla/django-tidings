@@ -17,9 +17,13 @@ events
     :members:
     :private-members:
 
+    .. automethod:: __init__
+
   .. autoclass:: InstanceEvent
     :members:
     :private-members:
+
+    .. automethod:: __init__
 
   .. autoexception:: ActivationRequestFailed
 
