@@ -12,7 +12,6 @@ setup(
     packages=find_packages(exclude=['ez_setup']),
     url='http://github.com/erikrose/django-tidings',
     include_package_data=True,
-    package_data={'tidings': ['README.rst']},
     zip_safe=False,
     install_requires=[
         'django',

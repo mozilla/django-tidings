@@ -1,0 +1,9 @@
+include LICENSE
+include README.rst
+include docs/*.rst
+include docs/Makefile
+include docs/make.bat
+include docs/conf.py
+include fabfile.py
+include test_app/templates/*
+include tidings/templates/tidings/*
