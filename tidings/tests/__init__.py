@@ -5,13 +5,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.management import call_command
 from django.db.models import loading
+from django.test import TestCase
 
 from tidings.models import Watch, WatchFilter
 from tidings.utils import import_from_setting
-
-
-TestCase = import_from_setting('NOTIFICATIONS_TEST_CASE',
-                               'django.test.TestCase')
 
 
 def user(save=False, **kwargs):
