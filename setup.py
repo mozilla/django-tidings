@@ -8,7 +8,7 @@ setup(
     long_description=open('README.rst').read(),
     author='Erik Rose',
     author_email='erik@mozilla.com',
-    license='GPL',
+    license='BSD',
     packages=find_packages(exclude=['ez_setup']),
     url='http://github.com/erikrose/django-tidings',
     include_package_data=True,
@@ -25,9 +25,11 @@ setup(
     classifiers = [
         'Environment :: Web Environment',
         'Framework :: Django',
-        'Programming Language :: Python',
         'Intended Audience :: Developers',
+        'License :: OSI Approved :: BSD License',
         'Natural Language :: English',
         'Operating System :: OS Independent',
+        'Programming Language :: Python',
+        'Topic :: Communications :: Email',
         'Topic :: Software Development :: Libraries :: Python Modules'],
 )
