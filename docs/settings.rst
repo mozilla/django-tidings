@@ -4,7 +4,10 @@ Settings
 
 django-tidings offers several Django settings to customize its behavior:
 
-:const:`~django.conf.settings.TIDINGS_FROM_ADDRESS`
+.. module:: django.conf.settings
+
+.. data:: TIDINGS_FROM_ADDRESS
+
   The address from which tidings' emails will appear to come. Most of the time,
   the :class:`~tidings.events.Event` has an opportunity to override this in
   code, but this settings is used as a default for conveniences like
@@ -18,7 +21,8 @@ django-tidings offers several Django settings to customize its behavior:
   
     TIDINGS_FROM_ADDRESS = 'notifications@example.com'
 
-:const:`~django.conf.settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES`
+.. data:: TIDINGS_CONFIRM_ANONYMOUS_WATCHES
+
   A Boolean: whether to require email confirmation of anonymous watches. If
   this is ``True``, tidings will send a mail to the creator of an anonymous
   watch with a confirmation link. That link should point to a view which calls
@@ -32,7 +36,8 @@ django-tidings offers several Django settings to customize its behavior:
   
     TIDINGS_CONFIRM_ANONYMOUS_WATCHES = True
 
-:const:`~django.conf.settings.TIDINGS_MODEL_BASE`
+.. data:: TIDINGS_MODEL_BASE
+
   A dotted path to a model base class to use instead of
   ``django.db.models.Model``. This can come in handy if, for example, you would
   like to add memcached support to tidings' models. To avoid staleness, tidings
@@ -46,7 +51,8 @@ django-tidings offers several Django settings to customize its behavior:
     
     TIDINGS_MODEL_BASE = 'sumo.models.ModelBase'
 
-:const:`~django.conf.settings.TIDINGS_REVERSE`
+.. data:: TIDINGS_REVERSE
+
   A dotted path to an alternate implementation of Django's ``reverse()``
   function. support.mozilla.com uses this to make tidings aware of the locale
   prefixes on its URLs, e.g. ``/en-US/unsubscribe``.
