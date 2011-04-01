@@ -21,6 +21,11 @@ os.environ['PYTHONPATH'] += (':' if os.environ['PYTHONPATH'] else '') + ROOT
 
 
 def doc(kind='html'):
+    """Build Sphinx docs.
+
+    Requires Sphinx to be installed.
+
+    """
     with cd('docs'):
         local('make clean %s' % kind)
 
@@ -32,5 +37,10 @@ def test():
     local('test_app/manage.py test tidings')
 
 def updoc():
-    doc('dirhtml')
-    rsync_project('p/%s' % NAME, 'docs/_build/dirhtml/', delete=True)
+    """Build Sphinx docs and upload them to packages.python.org.
+
+    Requires Sphinx-PyPI-upload to be installed.
+
+    """
+    doc('html')
+    local('python setup.py upload_sphinx --upload-dir=docs/_build/html')
