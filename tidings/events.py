@@ -67,9 +67,9 @@ def _unique_by_email(users_and_watches):
 class Event(object):
     """Abstract base class for events
 
-    An Event represents, simply, something that occurs. A Watch is a record of
-    someone's interest in a certain type of Event, distinguished by
-    Event.event_type.
+    An :class:`Event` represents, simply, something that occurs. A
+    :class:`~tidings.models.Watch` is a record of someone's interest in a
+    certain type of :class:`Event`, distinguished by ``Event.event_type``.
 
     Fire an Event (``SomeEvent.fire()``) from the code that causes the
     interesting event to occur. Fire it any time the event *might* have
@@ -78,13 +78,14 @@ class Event(object):
     outside the Event, because you'll end up repeating yourself if the event is
     ever fired from more than one place.
 
-    Event subclasses can optionally represent a more limited scope of interest
-    by populating the Watch.content_type field and/or adding related
-    WatchFilter rows holding name/value pairs, the meaning of which is up to
-    each individual subclass. NULL values are considered wildcards.
+    :class:`Event` subclasses can optionally represent a more limited scope of
+    interest by populating the ``Watch.content_type`` field and/or adding
+    related :class:`~tidings.models.WatchFilter` rows holding name/value pairs,
+    the meaning of which is up to each individual subclass. NULL values are
+    considered wildcards.
 
-    Event subclass instances must be pickleable so they can be shuttled off to
-    celery tasks.
+    :class:`Event` subclass instances must be pickleable so they can be
+    shuttled off to celery tasks.
 
     """
     # event_type = 'hamster modified'  # key for the event_type column
@@ -102,7 +103,7 @@ class Event(object):
         idea what just changed, so it doesn't know which notifications to send.
         Also, we could easily send mail accidentally: for instance, during
         tests. If we want implicit event firing, we can always register a
-        signal handler that calls ``fire()``.
+        signal handler that calls :meth:`fire()`.
 
         :arg exclude: If a saved user is passed in, that user will not be
           notified, though anonymous notifications having the same email
@@ -133,8 +134,8 @@ class Event(object):
 
     def _users_watching_by_filter(self, object_id=None, exclude=None,
                                   **filters):
-        """Return an iterable of (User/EmailUser, Watch) pairs watching the
-        event.
+        """Return an iterable of (``User``/:class:`~tidings.models.EmailUser`,
+        :class:`~tidings.models.Watch`) pairs watching the event.
 
         Of multiple Users/EmailUsers having the same email address, only one is
         returned. Users are favored over EmailUsers so we are sure to be able
@@ -227,8 +228,8 @@ class Event(object):
         attrs of the class.
 
         Matched Watches may be either confirmed and unconfirmed. They may
-        include duplicates if the get-then-create race condition in notify()
-        allowed them to be created.
+        include duplicates if the get-then-create race condition in
+        :meth:`notify()` allowed them to be created.
 
         If you pass an email, it will be matched against only the email
         addresses of anonymous watches. At the moment, the only integration
@@ -284,7 +285,7 @@ class Event(object):
         Count only watches that match the given filters exactly--not ones which
         match merely a superset of them. This lets callers distinguish between
         watches which overlap in scope. Equivalently, this lets callers check
-        whether notify() has been called with these arguments.
+        whether :meth:`notify()` has been called with these arguments.
 
         Implementations in subclasses may take different arguments--for
         example, to assume certain filters--though most will probably just use
@@ -292,7 +293,7 @@ class Event(object):
         supports and the meaning of each.
 
         Passing this an AnonymousUser always returns False. This means you can
-        always pass it request.user in a view and get a sensible response.
+        always pass it ``request.user`` in a view and get a sensible response.
 
         """
         return cls._watches_belonging_to_user(user_or_email_,
@@ -305,17 +306,17 @@ class Event(object):
         occurs and meets the criteria given in ``filters``.
 
         Return the created (or the existing matching) Watch so you can call
-        activate() on it if you're so inclined.
+        :meth:`~tidings.models.Watch.activate()` on it if you're so inclined.
 
         Implementations in subclasses may take different arguments; see the
-        docstring of is_notifying().
+        docstring of :meth:`is_notifying()`.
 
         Send an activation email if an anonymous watch is created and
         :const:`TIDINGS_CONFIRM_ANONYMOUS_WATCHES` is ``True``. If the
         activation request fails, raise a ActivationRequestFailed exception.
 
-        Calling notify() twice for an anonymous user will send the email
-        each time.
+        Calling :meth:`notify()` twice for an anonymous user will send the
+        email each time.
 
         """
         # A test-for-existence-then-create race condition exists here, but it
@@ -372,7 +373,7 @@ class Event(object):
         exist due to the get-then-create race condition, delete them all.
 
         Implementations in subclasses may take different arguments; see the
-        docstring of is_notifying().
+        docstring of :meth:`is_notifying()`.
 
         """
         cls._watches_belonging_to_user(user_or_email_, **filters).delete()
@@ -434,8 +435,8 @@ class Event(object):
         """Return a URL pointing to the watch activation.
 
         TODO: provide generic implementation of this before liberating.
-        Generic implementation could involve a setting to the default reverse()
-        path, e.g. 'tidings.activate_watch'.
+        Generic implementation could involve a setting to the default
+        ``reverse()`` path, e.g. ``'tidings.activate_watch'``.
 
         """
         raise NotImplementedError
@@ -469,7 +470,8 @@ class EventUnion(Event):
         self.events = events
 
     def _mails(self, users_and_watches):
-        """Default implementation fires the _mails() of my first event but may
+        """Default implementation calls the
+        :meth:`~tidings.events.Event._mails()` of my first event but may
         pass it any of my events as ``self``.
 
         Use this default implementation when the content of each event's mail
@@ -478,8 +480,8 @@ class EventUnion(Event):
         add no value, this is a fine choice. If the second event's email would
         add value, you should probably fire both events independently and let
         both mails be delivered. Or, if you would like to send a single mail
-        with a custom template for a batch of events, just subclass EventUnion
-        and override this method.
+        with a custom template for a batch of events, just subclass
+        :class:`EventUnion` and override this method.
 
         """
         return self.events[0]._mails(users_and_watches)

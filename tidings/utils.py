@@ -70,8 +70,8 @@ def hash_to_unsigned(data):
     verbatim.
 
     If data is an int outside that range, behavior is undefined at the moment.
-    We rely on the PositiveIntegerField on WatchFilter to scream if the int is
-    too long for the field.
+    We rely on the PositiveIntegerField on :class:`~tidings.models.WatchFilter`
+    to scream if the int is too long for the field.
 
     """
     if isinstance(data, basestring):

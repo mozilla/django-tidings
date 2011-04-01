@@ -50,7 +50,7 @@ Events, Watches, and Scoping
 
 django-tidings is basically a big dispatch engine: something happens (that is,
 an :class:`~tidings.events.Event` subclass fires), and tidings then has to
-determine which :class:`~tidings.models.Watch` objects are relevant so it knows
+determine which  :class:`Watches <tidings.models.Watch>` are relevant so it knows
 whom to mail. Each kind of event has an ``event_type``, an arbitrary string
 that distinguishes it, and each watch references an event subclass by that
 string. However, there is more to the watch-event relationship than that; a
@@ -104,7 +104,7 @@ simple example to see how the ``EditInLanguageEvent`` class might be designed:
   
         ...
 
-This event makes use of only two :class:`tidings.models.Watch` fields: the
+This event makes use of only two :class:`~tidings.models.Watch` fields: the
 ``event_type`` (which is implicitly handled by the framework) and a filter with
 the key "language". ``content_type`` and ``object_id`` are unused. The pivotal
 bit is line 20, which calls
@@ -166,8 +166,8 @@ A few more methods are necessary to get to a fully working
           document = self.revision.document
   
           # This loop is shown for clarity, but in real code, you should use
-          # the :func:`~tidings.utils.emails_with_users_and_watches`
-          # convenience function.
+          # the tidings.utils.emails_with_users_and_watches convenience
+          # function.
           for user, watch in users_and_watches:
               yield EmailMessage(
                   'Notification: an edit!',

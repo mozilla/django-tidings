@@ -36,9 +36,10 @@ def multi_raw(query, params, models):
 class Watch(ModelBase):
     """The registration of a user's interest in a certain event
 
-    At minimum, specifies an event_type and thereby an Event subclass. May also
-    specify a content type and/or object ID and, indirectly, any number of
-    WatchFilters.
+    At minimum, specifies an event_type and thereby an
+    :class:`~tidings.events.Event` subclass. May also specify a content type
+    and/or object ID and, indirectly, any number of
+    :class:`WatchFilters <WatchFilter>`.
 
     """
     # Key used by an Event to find watches it manages:
