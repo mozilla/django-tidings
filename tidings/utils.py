@@ -28,9 +28,9 @@ class peekable(object):
         return True
 
     def peek(self):
-        """Return the item that will be next returned from next().
+        """Return the item that will be next returned from ``next()``.
 
-        Raise StopIteration if there are no items left.
+        Raise ``StopIteration`` if there are no items left.
 
         """
         if not hasattr(self, '_peek'):
@@ -45,9 +45,9 @@ class peekable(object):
 
 def collate(*iterables, **kwargs):
     """Return an iterable ordered collation of the already-sorted items
-    from each of `iterables`, compared by kwarg `key`.
+    from each of ``iterables``, compared by kwarg ``key``.
 
-    If reverse=True is passed, iterables must return their results in
+    If ``reverse=True`` is passed, iterables must return their results in
     descending order rather than ascending.
 
     """
@@ -91,18 +91,17 @@ def hash_to_unsigned(data):
 
 
 def emails_with_users_and_watches(subject, template_path, vars,
-    users_and_watches, from_email=settings.NOTIFICATIONS_FROM_ADDRESS,
+    users_and_watches, from_email=settings.TIDINGS_FROM_ADDRESS,
     **extra_kwargs):
     """Return iterable of EmailMessages with user and watch values substituted.
 
     A convenience function for generating emails by repeatedly rendering a
-    Django template with the given vars plus a `user` and `watch` key for each
-    pair in `users_and_watches`
+    Django template with the given ``vars`` plus a ``user`` and ``watch`` key
+    for each pair in ``users_and_watches``
 
-    Args:
-        template_path -- path to template file
-        vars -- a map which becomes the Context passed in to the template
-        extra_kwargs -- additional kwargs to pass into EmailMessage constructor
+    :arg template_path: path to template file
+    :arg vars: a map which becomes the Context passed in to the template
+    :arg extra_kwargs: additional kwargs to pass into EmailMessage constructor
 
     """
     template = loader.get_template(template_path)
@@ -137,9 +136,8 @@ def _imported_symbol(import_path):
 def import_from_setting(setting_name, fallback):
     """Return the resolution of an import path stored in a Django setting.
 
-    Args:
-        setting_name: The name of the setting holding the import path
-        fallback: An import path to use if the given setting doesn't exist
+    :arg setting_name: The name of the setting holding the import path
+    :arg fallback: An import path to use if the given setting doesn't exist
 
     Raise ImproperlyConfigured if a path is given that can't be resolved.
 
@@ -152,5 +150,5 @@ def import_from_setting(setting_name, fallback):
 
 
 # Here to be imported by others:
-reverse = import_from_setting('NOTIFICATIONS_REVERSE',
+reverse = import_from_setting('TIDINGS_REVERSE',
                               'django.core.urlresolvers.reverse')

@@ -71,12 +71,12 @@ class Event(object):
     someone's interest in a certain type of Event, distinguished by
     Event.event_type.
 
-    Fire an Event (SomeEvent.fire()) from the code that causes the interesting
-    event to occur. Fire it any time the event *might* have occurred. The Event
-    will determine whether conditions are right to actually send notifications;
-    don't succumb to the temptation to do these tests outside the Event,
-    because you'll end up repeating yourself if the event is ever fired from
-    more than one place.
+    Fire an Event (``SomeEvent.fire()``) from the code that causes the
+    interesting event to occur. Fire it any time the event *might* have
+    occurred. The Event will determine whether conditions are right to actually
+    send notifications; don't succumb to the temptation to do these tests
+    outside the Event, because you'll end up repeating yourself if the event is
+    ever fired from more than one place.
 
     Event subclasses can optionally represent a more limited scope of interest
     by populating the Watch.content_type field and/or adding related
@@ -89,7 +89,10 @@ class Event(object):
     """
     # event_type = 'hamster modified'  # key for the event_type column
     content_type = None  # or, for example, Hamster
-    filters = set()  # or, for example, set(['color', 'flavor'])
+
+    #: Possible filter keys, for validation only. For example:
+    #: ``set(['color', 'flavor'])``
+    filters = set()
 
     def fire(self, exclude=None):
         """Asynchronously notify everyone watching the event.
@@ -99,11 +102,11 @@ class Event(object):
         idea what just changed, so it doesn't know which notifications to send.
         Also, we could easily send mail accidentally: for instance, during
         tests. If we want implicit event firing, we can always register a
-        signal handler that calls fire().
+        signal handler that calls ``fire()``.
 
-        If a saved user is passed in as `exclude`, that user will not be
-        notified, though anonymous notifications having the same email address
-        may still be sent.
+        :arg exclude: If a saved user is passed in, that user will not be
+          notified, though anonymous notifications having the same email
+          address may still be sent.
 
         """
         # Tasks don't receive the `self` arg implicitly.
@@ -120,7 +123,7 @@ class Event(object):
 
     @classmethod
     def _validate_filters(cls, filters):
-        """Raise a TypeError if `filters` contains any keys inappropriate to
+        """Raise a TypeError if ``filters`` contains any keys inappropriate to
         this event class."""
         for k in filters.iterkeys():
             if k not in cls.filters:
@@ -137,17 +140,18 @@ class Event(object):
         returned. Users are favored over EmailUsers so we are sure to be able
         to, for example, include a link to a user profile in the mail.
 
-        "Watching the event" means having a Watch whose event_type is
-        self.event_type, whose content_type is self.content_type or NULL, whose
-        object_id is `object_id` or NULL, and whose WatchFilter rows match as
-        follows: each name/value pair given in `filters` must be matched by a
-        related WatchFilter, or there must be no related WatchFilter having
-        that name. If you find yourself wanting the lack of a particularly
-        named WatchFilter to scuttle the match, use a different event_type
-        instead.
+        "Watching the event" means having a Watch whose ``event_type`` is
+        ``self.event_type``, whose ``content_type`` is ``self.content_type`` or
+        ``NULL``, whose ``object_id`` is ``object_id`` or ``NULL``, and whose
+        WatchFilter rows match as follows: each name/value pair given in
+        ``filters`` must be matched by a related WatchFilter, or there must be
+        no related WatchFilter having that name. If you find yourself wanting
+        the lack of a particularly named WatchFilter to scuttle the match, use
+        a different event_type instead.
 
-        If a saved user is passed in as `exclude`, that user will never be
-        returned, though anonymous watches having the same email address may.
+        :arg exclude: If a saved user is passed in as this argument, that user
+            will never be returned, though anonymous watches having the same
+            email address may.
 
         """
         # I don't think we can use the ORM here, as there's no way to get a
@@ -275,7 +279,7 @@ class Event(object):
     def is_notifying(cls, user_or_email_, object_id=None, **filters):
         """Return whether the user/email is watching this event (either
         active or inactive watches), conditional on meeting the criteria in
-        `filters`.
+        ``filters``.
 
         Count only watches that match the given filters exactly--not ones which
         match merely a superset of them. This lets callers distinguish between
@@ -298,7 +302,7 @@ class Event(object):
     @classmethod
     def notify(cls, user_or_email_, object_id=None, **filters):
         """Start notifying the given user or email address when this event
-        occurs and meets the criteria given in `filters`.
+        occurs and meets the criteria given in ``filters``.
 
         Return the created (or the existing matching) Watch so you can call
         activate() on it if you're so inclined.
@@ -307,8 +311,8 @@ class Event(object):
         docstring of is_notifying().
 
         Send an activation email if an anonymous watch is created and
-        settings.CONFIRM_ANONYMOUS_WATCHES = True. If the activation request
-        fails, raise a ActivationRequestFailed exception.
+        :const:`TIDINGS_CONFIRM_ANONYMOUS_WATCHES` is ``True``. If the
+        activation request fails, raise a ActivationRequestFailed exception.
 
         Calling notify() twice for an anonymous user will send the email
         each time.
@@ -338,7 +342,7 @@ class Event(object):
                              for x in xrange(10))
             # Registered users don't need to confirm, but anonymous users do.
             is_active = ('user' in create_kwargs or
-                          not settings.CONFIRM_ANONYMOUS_WATCHES)
+                          not settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES)
             if object_id:
                 create_kwargs['object_id'] = object_id
             watch = Watch.objects.create(
@@ -387,11 +391,11 @@ class Event(object):
     def _mails(self, users_and_watches):
         """Return an iterable yielding an EmailMessage to send to each user.
 
-        `users_and_watches` -- an iterable of (User or EmailUser, Watch) pairs
-            where the first element is the user to send to and the second is
-            the watch that indicated the user's interest in this event
+        :arg users_and_watches: an iterable of (User or EmailUser, Watch)
+            pairs where the first element is the user to send to and the second
+            is the watch that indicated the user's interest in this event
 
-        tidings.utils.emails_with_users_and_watches() can come in handy
+        :meth:`tidings.utils.emails_with_users_and_watches()` can come in handy
         for generating mails from Django templates.
 
         """
@@ -422,7 +426,7 @@ class Event(object):
         """
         # TODO: basic implementation.
         return mail.EmailMessage('TODO', 'Activate!',
-                                 settings.NOTIFICATIONS_FROM_ADDRESS,
+                                 settings.TIDINGS_FROM_ADDRESS,
                                  [email])
 
     @classmethod
@@ -451,7 +455,7 @@ class EventUnion(Event):
 
     Use this when you want to send a single mail to each person watching any of
     several events. For example, this sends only 1 mail to a given user, even
-    if he was being notified of all 3 events:
+    if he was being notified of all 3 events::
 
         EventUnion(SomeEvent(), OtherEvent(), ThirdEvent()).fire()
 
@@ -460,13 +464,13 @@ class EventUnion(Event):
     # friends.
 
     def __init__(self, *events):
-        """`events` -- the events of which to take the union"""
+        """``events`` -- the events of which to take the union"""
         super(EventUnion, self).__init__()
         self.events = events
 
     def _mails(self, users_and_watches):
         """Default implementation fires the _mails() of my first event but may
-        pass it any of my events as `self`.
+        pass it any of my events as ``self``.
 
         Use this default implementation when the content of each event's mail
         template is essentially the same, e.g. "This new post was made.
@@ -492,7 +496,11 @@ class EventUnion(Event):
 
 
 class InstanceEvent(Event):
-    """Common case of watching a specific instance of a Model."""
+    """Abstract superclass for watching a specific instance of a Model.
+
+    Subclasses should specify a content_type.
+
+    """
 
     def __init__(self, instance, *args, **kwargs):
         super(InstanceEvent, self).__init__(*args, **kwargs)
@@ -501,7 +509,7 @@ class InstanceEvent(Event):
     @classmethod
     def notify(cls, user_or_email, instance):
         """Create, save, and return a Watch which fires when something
-        happens to `instance`."""
+        happens to ``instance``."""
         return super(InstanceEvent, cls).notify(user_or_email,
                                                 object_id=instance.pk)
 

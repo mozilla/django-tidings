@@ -4,7 +4,19 @@ from tidings.models import Watch
 
 
 def unsubscribe(request, watch_id):
-    """Unsubscribe from (i.e. delete) a Watch."""
+    """Unsubscribe from (i.e. delete) the watch of ID ``watch_id``.
+
+    Expects an ``s`` querystring parameter matching the watch's secret.
+
+    GET will result in a confirmation page (or a failure page if the secret is
+    wrong). POST will actually delete the watch (again, if the secret is
+    correct).
+
+    The templates assume use of the Jinja templating engine via jingo and the
+    presence of a ``base.html`` template containing a ``content`` block. If you
+    aren't using Jinja, this view can serve as guidance in writing your own.
+
+    """
     # Grab the watch and secret; complain if either is wrong:
     try:
         watch = Watch.objects.get(pk=watch_id)

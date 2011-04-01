@@ -7,7 +7,7 @@ from django.db import models, connections, router
 from tidings.utils import import_from_setting, reverse
 
 
-ModelBase = import_from_setting('NOTIFICATIONS_MODEL_BASE',
+ModelBase = import_from_setting('TIDINGS_MODEL_BASE',
                                 'django.db.models.Model')
 
 
@@ -15,8 +15,8 @@ def multi_raw(query, params, models):
     """Scoop multiple model instances out of the DB at once, given a query that
     returns all fields of each.
 
-    Return an iterable of sequences of model instances parallel to the `models`
-    sequence of classes. For example...
+    Return an iterable of sequences of model instances parallel to the
+    ``models`` sequence of classes. For example::
 
         [(<User such-and-such>, <Watch such-and-such>), ...]
 
@@ -69,7 +69,7 @@ class Watch(ModelBase):
     def activate(self):
         """Enable this watch so it actually fires.
 
-        Return self to support method chaining.
+        Return ``self`` to support method chaining.
 
         """
         self.is_active = True
@@ -86,6 +86,7 @@ class Watch(ModelBase):
 
 class WatchFilter(ModelBase):
     """Additional key/value pairs that pare down the scope of a watch"""
+
     watch = models.ForeignKey(Watch, related_name='filters')
     name = models.CharField(max_length=20)
 
@@ -113,8 +114,7 @@ class NotificationsMixin(models.Model):
 
     """
     watches = generic.GenericRelation(
-        Watch,
-        related_name='%(app_label)s_%(class)s_watches')
+        Watch, related_name='%(app_label)s_%(class)s_watches')
 
     class Meta(object):
         abstract = True
@@ -123,7 +123,8 @@ class NotificationsMixin(models.Model):
 class EmailUser(AnonymousUser):
     """An anonymous user identified only by email address
 
-    To test whether a returned user is an anonymous user, call is_anonymous().
+    To test whether a returned user is an anonymous user, call
+    ``is_anonymous()``.
 
     """
     def __init__(self, email=''):

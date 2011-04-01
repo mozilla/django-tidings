@@ -46,25 +46,25 @@ class ImportedFromSettingTests(TestCase):
     """Tests for import_from_setting() and _imported_symbol()"""
 
     @patch.object(settings._wrapped,
-                  'NOTIFICATIONS_MODEL_BASE',
+                  'TIDINGS_MODEL_BASE',
                   'django.db.models.Model',
                   create=True)
     def test_success(self):
         from django.db.models import Model
-        assert import_from_setting('NOTIFICATIONS_MODEL_BASE', 'blah') == Model
+        assert import_from_setting('TIDINGS_MODEL_BASE', 'blah') == Model
 
     @raises(ImproperlyConfigured)
     @patch.object(settings._wrapped,
-                  'NOTIFICATIONS_MODEL_BASE',
+                  'TIDINGS_MODEL_BASE',
                   'hummahummanookanookanonexistent.thing',
                   create=True)
     def test_module_missing(self):
-        import_from_setting('NOTIFICATIONS_MODEL_BASE', 'blah')
+        import_from_setting('TIDINGS_MODEL_BASE', 'blah')
 
     @raises(ImproperlyConfigured)
     @patch.object(settings._wrapped,
-                  'NOTIFICATIONS_MODEL_BASE',
+                  'TIDINGS_MODEL_BASE',
                   'django.hummahummanookanookanonexistent',
                   create=True)
     def test_symbol_missing(self):
-        import_from_setting('NOTIFICATIONS_MODEL_BASE', 'blah')
+        import_from_setting('TIDINGS_MODEL_BASE', 'blah')
