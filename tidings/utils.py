@@ -65,26 +65,30 @@ def collate(*iterables, **kwargs):
 
 
 def hash_to_unsigned(data):
-    """If data is a string or unicode string, return an unsigned 4-byte int
-    hash of it. If data is already an int that fits those parameters, return it
-    verbatim.
+    """If ``data`` is a string or unicode string, return an unsigned 4-byte int
+    hash of it. If ``data`` is already an int that fits those parameters,
+    return it verbatim.
 
-    If data is an int outside that range, behavior is undefined at the moment.
-    We rely on the PositiveIntegerField on :class:`~tidings.models.WatchFilter`
-    to scream if the int is too long for the field.
+    If ``data`` is an int outside that range, behavior is undefined at the
+    moment. We rely on the ``PositiveIntegerField`` on
+    :class:`~tidings.models.WatchFilter` to scream if the int is too long for
+    the field.
+
+    We use CRC32 to do the hashing. Though CRC32 is not a good general-purpose
+    hash function, it has no collisions on a dictionary of 38,470 English
+    words, which should be fine for the small sets that :class:`WatchFilters
+    <tidings.models.WatchFilter>` are designed to enumerate. As a bonus, it is
+    fast and available as a built-in function in some DBs. If your set of
+    filter values is very large or has different CRC32 distribution properties
+    than English words, you might want to do your own hashing in your
+    :class:`~tidings.events.Event` subclass and pass ints when specifying
+    filter values.
 
     """
     if isinstance(data, basestring):
         # Return a CRC32 value identical across Python versions and platforms
         # by stripping the sign bit as on
-        # http://docs.python.org/library/zlib.html. Though CRC32 is not a good
-        # general-purpose hash function, it has no collisions on a dictionary
-        # of 38,470 English words, which should be fine for the small sets that
-        # watch filters are designed to enumerate. As a bonus, it is fast and
-        # available as a built-in function in some DBs. If your set of filter
-        # values is very large or has different CRC32 distribution properties
-        # than English words, you might want to do your own hashing in your
-        # Event subclass and pass ints when specifying filter values.
+        # http://docs.python.org/library/zlib.html.
         return crc32(data.encode('utf-8')) & 0xffffffff
     else:
         return int(data)

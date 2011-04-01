@@ -6,10 +6,11 @@ django-tidings offers several Django settings to customize its behavior:
 
 :const:`~django.conf.settings.TIDINGS_FROM_ADDRESS`
   The address from which tidings' emails will appear to come. Most of the time,
-  the Event has an opportunity to override this in code, but this settings is
-  used as a default for conveniences like
-  :func:`tidings.utils.emails_with_users_and_watches` and the default
-  implementation of :meth:`tidings.events.Event._activation_email`.
+  the :class:`~tidings.events.Event` has an opportunity to override this in
+  code, but this settings is used as a default for conveniences like
+  :func:`~tidings.utils.emails_with_users_and_watches` and the default
+  implementation of :meth:`Event._activation_email()
+  <tidings.events.Event._activation_email>`.
   
   Default: No default; you must set it manually.
   
@@ -21,9 +22,9 @@ django-tidings offers several Django settings to customize its behavior:
   A Boolean: whether to require email confirmation of anonymous watches. If
   this is ``True``, tidings will send a mail to the creator of an anonymous
   watch with a confirmation link. That link should point to a view which calls
-  :meth:`tidings.models.Watch.activate` and saves the watch. (No such
-  built-in view is yet provided.) Until the watch is activated, tidings will
-  ignore it.
+  :meth:`Watch.activate() <tidings.models.Watch.activate>` and saves the watch.
+  (No such built-in view is yet provided.) Until the watch is activated,
+  tidings will ignore it.
   
   Default: No default; you must set it manually.
   

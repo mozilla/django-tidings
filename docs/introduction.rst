@@ -106,14 +106,33 @@ simple example to see how the ``EditInLanguageEvent`` class might be designed:
 
 This event makes use of only two :class:`~tidings.models.Watch` fields: the
 ``event_type`` (which is implicitly handled by the framework) and a filter with
-the key "language". ``content_type`` and ``object_id`` are unused. The pivotal
-bit is line 20, which calls
-:meth:`~tidings.events.Event._users_watching_by_filter`, the most interesting
-method in the entire framework. In essence, this line says "Find me all the
-watches matching my ``event_type`` and having a "language" filter of the value
-``self.revision.document.language``." (It is always a good idea to pass
-``**kwargs`` along so you can support the :meth:`exclude
+the key "language". ``content_type`` and ``object_id`` are unused. The action
+happens in the ``_users_watching()`` method, which :meth:`Event.fire()
+<tidings.events.Event.fire>` calls to determine whom to mail. The pivotal bit
+is line 20, which calls
+:meth:`~tidings.events.Event._users_watching_by_filter`. This is the most
+interesting method in the entire framework. In essence, this line says "Find me
+all the watches matching my ``event_type`` and having a "language" filter of
+the value ``self.revision.document.language``." (It is always a good idea to
+pass ``**kwargs`` along so you can support the :meth:`exclude
 <tidings.events.Event._users_watching_by_filter>` option.)
+
+Watch Filters
+.............
+
+This is a good point to say a word about :class:`WatchFilters
+<tidings.models.WatchFilter>`. A filter is a key/value pair. The key is a
+string and goes into the database verbatim. The value, however, is only a
+4-byte unsigned int. If you pass a string as a watch filter value, it will be
+hashed to make it fit. Thus, watch filters are no good for *storing* data but
+only for distinguishing among members of enumerated sets.
+
+An exception is if you pass an integer as a filter value. The framework will
+notice this and let the int through unmodified. Thus, you can put (unchecked)
+integer foreign key references into filters quite happily.
+
+Details of the hashing behavior are documented in
+:func:`~tidings.utils.hash_to_unsigned`.
 
 Wildcards
 .........
@@ -144,10 +163,10 @@ If, for some odd reason, a user ends up watching both *all*
 ``EditInLanguageEvents`` and German ``EditInLanguageEvents`` in particular,
 never fear: he will not receive two mails every time someone edits a German
 article. tidings will automatically de-duplicate users within the scope of one
-event class. When faced with a registered user and an anonymous subscription
-having the same email address, tidings will favor the registered user. That
-way, any mails you generate will have the opportunity to use a nice username,
-etc.
+event class. Also, when faced with a registered user and an anonymous
+subscription having the same email address, tidings will favor the registered
+user. That way, any mails you generate will have the opportunity to use a nice
+username, etc.
 
 Completing the Event Implementation
 -----------------------------------

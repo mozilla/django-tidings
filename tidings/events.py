@@ -396,8 +396,8 @@ class Event(object):
             pairs where the first element is the user to send to and the second
             is the watch that indicated the user's interest in this event
 
-        :meth:`tidings.utils.emails_with_users_and_watches()` can come in handy
-        for generating mails from Django templates.
+        :meth:`~tidings.utils.emails_with_users_and_watches()` can come in
+        handy for generating mails from Django templates.
 
         """
         # Did this instead of mail() because a common case might be sending the
