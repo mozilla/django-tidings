@@ -312,8 +312,9 @@ class Event(object):
         docstring of :meth:`is_notifying()`.
 
         Send an activation email if an anonymous watch is created and
-        :const:`TIDINGS_CONFIRM_ANONYMOUS_WATCHES` is ``True``. If the
-        activation request fails, raise a ActivationRequestFailed exception.
+        :data:`~django.conf.settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES` is
+        ``True``. If the activation request fails, raise a
+        ActivationRequestFailed exception.
 
         Calling :meth:`notify()` twice for an anonymous user will send the
         email each time.

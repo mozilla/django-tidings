@@ -10,7 +10,7 @@ django-tidings offers several Django settings to customize its behavior:
 
   The address from which tidings' emails will appear to come. Most of the time,
   the :class:`~tidings.events.Event` has an opportunity to override this in
-  code, but this settings is used as a default for conveniences like
+  code, but this setting is used as a default for conveniences like
   :func:`~tidings.utils.emails_with_users_and_watches` and the default
   implementation of :meth:`Event._activation_email()
   <tidings.events.Event._activation_email>`.

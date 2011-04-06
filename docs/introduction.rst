@@ -108,11 +108,10 @@ This event makes use of only two :class:`~tidings.models.Watch` fields: the
 ``event_type`` (which is implicitly handled by the framework) and a filter with
 the key "language". ``content_type`` and ``object_id`` are unused. The action
 happens in the ``_users_watching()`` method, which :meth:`Event.fire()
-<tidings.events.Event.fire>` calls to determine whom to mail. The pivotal bit
-is line 20, which calls
-:meth:`~tidings.events.Event._users_watching_by_filter`. This is the most
+<tidings.events.Event.fire>` calls to determine whom to mail. Line 20 calls
+:meth:`~tidings.events.Event._users_watching_by_filter`, which is the most
 interesting method in the entire framework. In essence, this line says "Find me
-all the watches matching my ``event_type`` and having a "language" filter of
+all the watches matching my ``event_type`` and having a 'language' filter with
 the value ``self.revision.document.language``." (It is always a good idea to
 pass ``**kwargs`` along so you can support the :meth:`exclude
 <tidings.events.Event._users_watching_by_filter>` option.)
