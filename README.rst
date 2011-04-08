@@ -2,9 +2,10 @@
 django-tidings
 ==============
 
-django-tidings is a framework for sending email notifications from a Django app
-in response to arbitrary events such as the modification of some model object.
-It is optimized for large-scale installations, having features like...
+django-tidings is a framework for sending email notifications to users who have
+registered interest in certain events, such as the modification of some model
+object. Used by support.mozilla.com, it is optimized for large-scale
+installations. Its features include...
 
 * Asynchronous operation using the ``celery`` task queue
 * De-duplication of notifications

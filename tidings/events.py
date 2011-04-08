@@ -292,8 +292,9 @@ class Event(object):
         this. However, subclasses should clearly document what filters they
         supports and the meaning of each.
 
-        Passing this an AnonymousUser always returns False. This means you can
-        always pass it ``request.user`` in a view and get a sensible response.
+        Passing this an ``AnonymousUser`` always returns ``False``. This means
+        you can always pass it ``request.user`` in a view and get a sensible
+        response.
 
         """
         return cls._watches_belonging_to_user(user_or_email_,
@@ -433,7 +434,8 @@ class Event(object):
 
     @classmethod
     def _activation_url(cls, watch):
-        """Return a URL pointing to the watch activation.
+        """Return a URL pointing to a view which :meth:`activates
+        <tidings.models.Watch.activate()>` a watch.
 
         TODO: provide generic implementation of this before liberating.
         Generic implementation could involve a setting to the default
