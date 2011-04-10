@@ -42,22 +42,22 @@ class Watch(ModelBase):
     :class:`WatchFilters <WatchFilter>`.
 
     """
-    # Key used by an Event to find watches it manages:
+    #: Key used by an Event to find watches it manages:
     event_type = models.CharField(max_length=30, db_index=True)
 
-    # Optional reference to a content type:
+    #: Optional reference to a content type:
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     object_id = models.PositiveIntegerField(db_index=True, null=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
     user = models.ForeignKey(User, null=True, blank=True)
 
-    # Email stored only in the case of anonymous users:
+    #: Email stored only in the case of anonymous users:
     email = models.EmailField(db_index=True, null=True, blank=True)
 
-    # Secret for activating anonymous watch email addresses.
+    #: Secret for activating anonymous watch email addresses.
     secret = models.CharField(max_length=10, null=True, blank=True)
-    # Active watches receive notifications, inactive watches don't.
+    #: Active watches receive notifications, inactive watches don't.
     is_active = models.BooleanField(default=False, db_index=True)
 
     def __unicode__(self):
@@ -91,9 +91,10 @@ class WatchFilter(ModelBase):
     watch = models.ForeignKey(Watch, related_name='filters')
     name = models.CharField(max_length=20)
 
-    # Either an int or the hash of an item in a reasonably small set, which is
-    # indicated by the name field. See comments by hash_to_unsigned() for more
-    # on what is reasonably small.
+    #: Either an int or the hash of an item in a reasonably small set, which is
+    #: indicated by the name field. See comments by
+    #: :func:`~tidings.utils.hash_to_unsigned()` for more on what is reasonably
+    #: small.
     value = models.PositiveIntegerField()
 
     class Meta(object):

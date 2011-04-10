@@ -507,7 +507,6 @@ class InstanceEvent(Event):
     ``content_type``.
 
     """
-
     def __init__(self, instance, *args, **kwargs):
         """:arg instance: the instance someone would have to be watching in order to be notified when this event is fired"""
         super(InstanceEvent, self).__init__(*args, **kwargs)
