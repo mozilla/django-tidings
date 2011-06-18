@@ -20,17 +20,23 @@ class ActivationRequestFailed(Exception):
 
 
 def _unique_by_email(users_and_watches):
-    """Given a sequence of (User/EmailUser, Watch) pairs clustered by email
-    address (which is never ''), yield from each cluster...
+    """Given a sequence of (User/EmailUser, [Watch, ...]) pairs
+    clustered by email address (which is never ''), yield from each
+    cluster a single pair like this::
 
-    (1) the first pair where the User has an email and is not anonymous, or, if
-        there isn't such a user...
+      (User/EmailUser, [Watch, Watch, ...]).
+
+    The User/Email is that of...
+    (1) the first incoming pair where the User has an email and is not
+        anonymous, or, if there isn't such a user...
     (2) the first pair.
+
+    The list of Watches consists of all those found in the cluster.
 
     Compares email addresses case-insensitively.
 
     """
-    def ensure_user_has_email(user, watch):
+    def ensure_user_has_email(user, cluster_email):
         """Make sure the user in the user-watch pair has an email address.
 
         The caller guarantees us an email from either the user or the watch. If
@@ -40,28 +46,31 @@ def _unique_by_email(users_and_watches):
         """
         # Some of these cases shouldn't happen, but we're tolerant.
         if not getattr(user, 'email', ''):
-            user = EmailUser(watch.email)
-        return user, watch
+            user = EmailUser(cluster_email)
+        return user
 
     # TODO: Do this instead with clever SQL that somehow returns just the
     # best row for each email.
 
-    # Email of current cluster:
-    email = ''
-    # Best pairs in cluster so far:
-    favorite_user, favorite_watch = None, None
+    cluster_email = ''  # email of current cluster
+    favorite_user = None  # best user in cluster so far
+    watches = []  # all watches in cluster
     for u, w in users_and_watches:
-        row_email = u.email or w.email
-        if email.lower() != row_email.lower():
-            if email != '':
-                yield ensure_user_has_email(favorite_user, favorite_watch)
-            favorite_user, favorite_watch = u, w
-            email = row_email
+        # w always has at least 1 Watch. All the emails are the same.
+        row_email = u.email or w[0].email
+        if cluster_email.lower() != row_email.lower():
+            # Starting a new cluster.
+            if cluster_email != '':
+                # Ship the favorites from the previous cluster:
+                yield ensure_user_has_email(favorite_user, cluster_email), watches
+            favorite_user, watches = u, []
+            cluster_email = row_email
         elif ((not favorite_user.email or u.is_anonymous()) and
               u.email and not u.is_anonymous()):
-            favorite_user, favorite_watch = u, w
+            favorite_user = u
+        watches.extend(w)
     if favorite_user is not None:
-        yield ensure_user_has_email(favorite_user, favorite_watch)
+        yield ensure_user_has_email(favorite_user, cluster_email), watches
 
 
 class Event(object):
@@ -135,11 +144,20 @@ class Event(object):
     def _users_watching_by_filter(self, object_id=None, exclude=None,
                                   **filters):
         """Return an iterable of (``User``/:class:`~tidings.models.EmailUser`,
-        :class:`~tidings.models.Watch`) pairs watching the event.
+        [:class:`~tidings.models.Watch` objects]) tuples watching the event.
 
         Of multiple Users/EmailUsers having the same email address, only one is
         returned. Users are favored over EmailUsers so we are sure to be able
         to, for example, include a link to a user profile in the mail.
+
+        The list of :class:`~tidings.models.Watch` objects includes both
+        those tied to the given User (if there is a registered user)
+        and to any anonymous Watch having the same email address. This
+        allows you to include all relevant unsubscribe URLs in a mail,
+        for example. It also lets you make decisions in the
+        :meth:`~tidings.events.EventUnion._mails()` method of
+        :class:`~tidings.events.EventUnion` based on the kinds of
+        watches found.
 
         "Watching the event" means having a Watch whose ``event_type`` is
         ``self.event_type``, whose ``content_type`` is ``self.content_type`` or
@@ -218,7 +236,12 @@ class Event(object):
         # IIRC, the DESC ordering was something to do with the placement of
         # NULLs. Track this down and explain it.
 
-        return _unique_by_email(multi_raw(query, params, [User, Watch]))
+        # Put watch in a list just for consistency. Once the pairs go through
+        # _unique_by_email, watches will be in a list, and EventUnion uses the
+        # same function to union already-list-enclosed pairs from individual
+        # events.
+        return _unique_by_email((u, [w]) for u, w in
+                                multi_raw(query, params, [User, Watch]))
 
     @classmethod
     def _watches_belonging_to_user(cls, user_or_email, object_id=None,
@@ -394,9 +417,10 @@ class Event(object):
     def _mails(self, users_and_watches):
         """Return an iterable yielding an EmailMessage to send to each user.
 
-        :arg users_and_watches: an iterable of (User or EmailUser, Watch)
+        :arg users_and_watches: an iterable of (User or EmailUser, [Watches])
             pairs where the first element is the user to send to and the second
-            is the watch that indicated the user's interest in this event
+            is a list of watches (usually just one) that indicated the
+            user's interest in this event
 
         :meth:`~tidings.utils.emails_with_users_and_watches()` can come in
         handy for generating mails from Django templates.
@@ -411,7 +435,7 @@ class Event(object):
         """Return an iterable of Users and EmailUsers watching this event
         and the Watches that map them to it.
 
-        Each yielded item is a tuple: (User or EmailUser, Watch).
+        Each yielded item is a tuple: (User or EmailUser, [list of Watches]).
 
         Default implementation returns users watching this object's event_type
         and, if defined, content_type.
@@ -490,7 +514,7 @@ class EventUnion(Event):
         return self.events[0]._mails(users_and_watches)
 
     def _users_watching(self, **kwargs):
-        # Get a sorted iterable of user-watch pairs:
+        # Get a sorted iterable of user-watches pairs:
         users_and_watches = collate(
             *[e._users_watching(**kwargs) for e in self.events],
             key=lambda (user, watch): user.email.lower(),

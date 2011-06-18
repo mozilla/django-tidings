@@ -9,7 +9,10 @@ To run django-tidings' self tests, install Fabric, then run this::
 
   fab test
 
-If you run into ImportErrors, make sure your ``PYTHONPATH`` is set happily.
+If you run into ImportErrors, make sure your ``PYTHONPATH`` is set
+happily. Here's how I do it::
+
+  PYTHONPATH=/Users/erose/Checkouts/kitsune/vendor/src/celery:/Users/erose/Checkouts/kitsune/vendor/packages/mock:/Users/erose/Checkouts/kitsune/vendor/src/django:/Users/erose/Checkouts/kitsune/vendor/src/kombu:/Users/erose/Checkouts/kitsune/vendor/src/django-celery fab test
 
 
 Documentation

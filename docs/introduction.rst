@@ -186,7 +186,7 @@ A few more methods are necessary to get to a fully working
           # This loop is shown for clarity, but in real code, you should use
           # the tidings.utils.emails_with_users_and_watches convenience
           # function.
-          for user, watch in users_and_watches:
+          for user, watches in users_and_watches:
               yield EmailMessage(
                   'Notification: an edit!',
                   'Document %s was edited.' % document.title,

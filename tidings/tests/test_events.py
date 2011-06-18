@@ -165,35 +165,54 @@ class UsersWatchingTests(TestCase):
         u, w = users_and_watches[0]
         eq_('Jed', u.first_name)
 
-    def test_unique_by_email(self):
+    def test_unique_by_email_user_selection(self):
         """Test the routine that sorts through users and watches having the
         same email addresses."""
         # Test the best in a cluster coming first, in the middle, and last.
-        # We mark the correct choices with secret='a'.
+        # We mark the correct choices with first_name='a'.
         users_and_watches = [
-            (user(email='hi'), watch(secret='a')),
-            (user(email='hi'), watch()),
-            (user(), watch(email='hi')),
+            (user(first_name='a', email='hi'), [watch()]),
+            (user(email='hi'), [watch()]),
+            (user(), [watch(email='hi')]),
 
-            (user(), watch(email='mid')),
-            (user(email='mid'), watch(secret='a')),
-            (user(), watch(email='mid')),
+            (user(), [watch(email='mid')]),
+            (user(first_name='a', email='mid'), [watch()]),
+            (user(), [watch(email='mid')]),
 
-            (user(), watch(email='lo')),
-            (user(), watch(email='lo')),
-            (user(email='lo'), watch(secret='a')),
+            (user(), [watch(email='lo')]),
+            (user(), [watch(email='lo')]),
+            (user(first_name='a', email='lo'), [watch()]),
 
-            (user(), watch(email='none', secret='a')),
-            (user(), watch(email='none')),
-
-            (user(), watch(email='hi', secret='a')),
-            (user(), watch(email='hi')),
-            (user(), watch(email='hi'))]
+            (user(), [watch(email='none', secret='a')]),
+            (user(), [watch(email='none')])]
 
         favorites = list(_unique_by_email(users_and_watches))
-        num_clusters = 5
-        eq_(num_clusters, len(favorites))
-        eq_(['a'] * num_clusters, [w.secret for u, w in favorites])
+        eq_(4, len(favorites))
+
+        # Test that we chose the correct users, where there are distinguishable
+        # (registered) users to choose from:
+        eq_(['a'] * 3, [u.first_name for u, w in favorites[:3]])
+
+    def test_unique_by_email_watch_collection(self):
+        """Make sure _unique_by_email() collects all watches in each cluster."""
+        w1, w2, w3 = watch(), watch(), watch(email='hi')
+        w4, w5, w6 = watch(), watch(), watch(email='lo')
+        users_and_watches = [
+            (user(email='hi'), [w1]),
+            (user(email='hi'), [w2]),
+            (user(), [w3]),
+
+            (user(email='lo'), [w4]),
+            (user(email='lo'), [w5]),
+            (user(), [w6])]
+        result = list(_unique_by_email(users_and_watches))
+
+        _, watches = result[0]
+        eq_(set([w1, w2, w3]), set(watches))
+
+        # Make sure the watches accumulator gets cleared between clusters:
+        _, watches = result[1]
+        eq_(set([w4, w5, w6]), set(watches))
 
     def test_unsaved_exclude(self):
         """Excluding an unsaved user should throw a ValueError."""
@@ -214,8 +233,6 @@ class EventUnionTests(TestCase):
 
     def test_merging(self):
         """Test that duplicate emails across multiple events get merged."""
-        # Remember to keep the emails in order when writing these test cases.
-        # [Ed: But doesn't the SQL query have an ORDER BY?]
         watch(event_type=TYPE, email='he@llo.com').save()
         watch(event_type=TYPE, email='ick@abod.com').save()
         registered_user = user(email='he@llo.com', save=True)
@@ -230,12 +247,12 @@ class EventUnionTests(TestCase):
         # query.
         class OneEvent(object):
             def _users_watching(self):
-                return [(user(email='HE@LLO.COM'), watch())]
+                return [(user(email='HE@LLO.COM'), [watch()])]
 
         class AnotherEvent(object):
             def _users_watching(self):
-                return [(user(email='he@llo.com'), watch()),
-                        (user(email='br@illo.com'), watch())]
+                return [(user(email='he@llo.com'), [watch()]),
+                        (user(email='br@illo.com'), [watch()])]
 
         addresses = [u.email for u, w in
                      EventUnion(OneEvent(),
@@ -251,6 +268,13 @@ class EventUnionTests(TestCase):
         watch(event_type=TYPE, email='he@llo.com').save()
         EventUnion(SimpleEvent(), AnotherEvent()).fire()
         assert _mails.called
+
+    def test_watch_lists(self):
+        """Ensure the Union returns every watch a user has."""
+        w1 = watch(event_type=TYPE, email='jeff@here.com', save=True)
+        w2 = watch(event_type=TYPE, email='jeff@here.com', save=True)
+        u, w = list(EventUnion(SimpleEvent())._users_watching())[0]
+        eq_([w1, w2], sorted(w, key=lambda x: x.id))
 
 
 class NotificationTests(TestCase):

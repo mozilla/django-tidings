@@ -33,6 +33,8 @@ class peekable(object):
         Raise ``StopIteration`` if there are no items left.
 
         """
+        # TODO: Give peek a default arg. Raise StopIteration only when it isn't
+        # provided. If it is, return the arg. Just like get('key', object())
         if not hasattr(self, '_peek'):
             self._peek = self._it.next()
         return self._peek
@@ -100,7 +102,7 @@ def emails_with_users_and_watches(subject, template_path, vars,
     """Return iterable of EmailMessages with user and watch values substituted.
 
     A convenience function for generating emails by repeatedly rendering a
-    Django template with the given ``vars`` plus a ``user`` and ``watch`` key
+    Django template with the given ``vars`` plus a ``user`` and ``watches`` key
     for each pair in ``users_and_watches``
 
     :arg template_path: path to template file
@@ -112,7 +114,9 @@ def emails_with_users_and_watches(subject, template_path, vars,
     context = Context(vars)
     for u, w in users_and_watches:
         context['user'] = u
-        context['watch'] = w
+        context['watch'] = w[0]  # Arbitrary single watch for compatibility
+                                 # with 0.1. TODO: remove.
+        context['watches'] = w
         yield EmailMessage(subject,
                            template.render(context),
                            from_email,
