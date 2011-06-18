@@ -17,7 +17,8 @@ NAME = os.path.basename(os.path.dirname(__file__))
 ROOT = os.path.abspath(os.path.dirname(__file__))
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'test_app.settings'
-os.environ['PYTHONPATH'] += (':' if os.environ['PYTHONPATH'] else '') + ROOT
+os.environ['PYTHONPATH'] = (((os.environ['PYTHONPATH'] + ':') if
+    os.environ.get('PYTHONPATH') else '') + ROOT)
 
 
 def doc(kind='html'):
