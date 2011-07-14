@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-tidings',
-    version='0.2',
+    version='0.3',
     description='Framework for asynchronous email notifications from Django',
     long_description=open('README.rst').read(),
     author='Erik Rose',

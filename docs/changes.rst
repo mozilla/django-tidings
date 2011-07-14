@@ -1,6 +1,10 @@
 Version History
 ===============
 
+0.3
+  * Support excluding multiple users when calling
+    :meth:`~tidings.events.Event.fire()`.
+
 0.2
   * API change: :meth:`~tidings.events.Event._mails()` now receives,
     in each user/watch tuple, a list of :class:`~tidings.models.Watch`

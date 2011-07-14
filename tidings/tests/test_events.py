@@ -409,6 +409,20 @@ class MailTests(TestCase):
         eq_(['du@de.com'], first_mail.to)
         eq_('Subject!', first_mail.subject)
 
+    @mock.patch.object(settings._wrapped, 'TIDINGS_CONFIRM_ANONYMOUS_WATCHES', False)
+    def test_exclude_multiple(self):
+        """Show that passing a sequence to exclude excludes them all."""
+        SimpleEvent.notify('du@de.com').activate().save()
+        user1 = user(email='ex1@clude.com', save=True)
+        SimpleEvent.notify(user1).activate().save()
+        user2 = user(email='ex2@clude.com', save=True)
+        SimpleEvent.notify(user2).activate().save()
+
+        SimpleEvent().fire(exclude=[user1, user2])
+
+        eq_(1, len(mail.outbox))
+        eq_(['du@de.com'], mail.outbox[0].to)
+
 
 def test_anonymous_user_compares():
     """Make sure anonymous users with different emails compare different."""

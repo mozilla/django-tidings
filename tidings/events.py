@@ -1,3 +1,4 @@
+from collections import Sequence
 import random
 from smtplib import SMTPException
 
@@ -116,7 +117,7 @@ class Event(object):
 
         :arg exclude: If a saved user is passed in, that user will not be
           notified, though anonymous notifications having the same email
-          address may still be sent.
+          address may still be sent. A sequence of users also be passed in.
 
         """
         # Tasks don't receive the `self` arg implicitly.
@@ -170,7 +171,7 @@ class Event(object):
 
         :arg exclude: If a saved user is passed in as this argument, that user
             will never be returned, though anonymous watches having the same
-            email address may.
+            email address may. A sequence of users may also be passed in.
 
         """
         # I don't think we can use the ORM here, as there's no way to get a
@@ -180,6 +181,11 @@ class Event(object):
         # with name=x and value=y?}--we could do it with extra(). Then we could
         # have EventUnion simply | the QuerySets together, which would avoid
         # having to merge in Python.
+
+        if exclude is None:
+            exclude = []
+        elif not isinstance(exclude, Sequence):
+            exclude = [exclude]
 
         def filter_conditions():
             """Return joins, WHERE conditions, and params to bind to them in
@@ -217,11 +223,13 @@ class Event(object):
             wheres.append('(w.object_id IS NULL OR w.object_id=%s)')
             params.append(object_id)
         if exclude:
-            if exclude.id:  # Don't try excluding unsaved Users.
-                wheres.append('(u.id IS NULL OR u.id!=%s)')
-                params.append(exclude.id)
-            else:
+            # Don't try excluding unsaved Users:1
+            if not all(e.id for e in exclude):
                 raise ValueError("Can't exclude an unsaved User.")
+
+            wheres.append('(u.id IS NULL OR u.id NOT IN (%s))' %
+                          ', '.join('%s' for e in exclude))
+            params.extend(e.id for e in exclude)
 
         query = (
             'SELECT u.*, w.* '
