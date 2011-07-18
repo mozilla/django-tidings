@@ -117,7 +117,7 @@ class Event(object):
 
         :arg exclude: If a saved user is passed in, that user will not be
           notified, though anonymous notifications having the same email
-          address may still be sent. A sequence of users also be passed in.
+          address may still be sent. A sequence of users may also be passed in.
 
         """
         # Tasks don't receive the `self` arg implicitly.
