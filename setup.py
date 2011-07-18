@@ -1,3 +1,5 @@
+import re
+
 from setuptools import setup, find_packages
 
 
@@ -5,7 +7,11 @@ setup(
     name='django-tidings',
     version='0.3',
     description='Framework for asynchronous email notifications from Django',
-    long_description=open('README.rst').read(),
+    long_description=open('README.rst').read() + \
+                     # Hack symbol names out of Sphinx directives:
+                     re.sub(r':[a-zA-Z]+:`[0-9a-zA-Z~_\.]+\.([^`]+)`',
+                            r'``\1``',
+                            open('docs/changes.rst').read()),
     author='Erik Rose',
     author_email='erik@mozilla.com',
     license='BSD',

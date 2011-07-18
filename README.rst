@@ -15,3 +15,4 @@ installations. Its features include...
 * Hook points for customizing any page drawn and any email sent
 
 Please see the full documentation at http://packages.python.org/django-tidings/
+
