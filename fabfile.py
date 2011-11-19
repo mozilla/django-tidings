@@ -8,7 +8,6 @@ import functools
 import os
 
 from fabric.api import local, cd
-from fabric.contrib.project import rsync_project
 
 
 local = functools.partial(local, capture=False)

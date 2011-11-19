@@ -2,7 +2,8 @@
 Reference Documentation
 =======================
 
-After understanding the basic concepts of tidings from the :doc:`introduction`, these docstrings make a nice comprehensive reference.
+After understanding the basic concepts of tidings from the :doc:`introduction`,
+these docstrings make a nice comprehensive reference.
 
 events
 ------
