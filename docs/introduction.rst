@@ -83,14 +83,14 @@ simple example to see how the ``EditInLanguageEvent`` class might be designed:
         """Event fired when any document in a certain language is edited
   
         Takes a revision when constructed and filters according to that
-        revision's document's locale
+        revision's document's language
   
         notify(), stop_notifying(), and is_notifying() take these args:
   
-            (user_or_email, locale=some_locale)
+            (user_or_email, language=some_language)
   
         """
-        event_type = 'edited wiki document in locale'
+        event_type = 'edited wiki document in language'
         filters = set(['language'])  # for validation only
     
         def __init__(self, revision):
@@ -234,7 +234,7 @@ For example...
 With the help of :class:`~tidings.events.InstanceEvent`, this event can be
 implemented just by choosing an ``event_type`` and a ``content_type`` and,
 because we need Revision info in addition to Document info when we build the
-mails, override ``__init__()``::
+mails, overriding ``__init__()``::
 
   class EditDocumentEvent(InstanceEvent):
       """Event fired when a certain document is edited"""
