@@ -21,9 +21,9 @@ setup(
     zip_safe=False,
     install_requires=[
         'django',
-        'jingo',
         'celery>=2.1.1'],
     tests_require=[
+        'jingo',
         'fabric',
         'django_nose',
         'djcelery',
