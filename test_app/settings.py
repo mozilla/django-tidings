@@ -33,6 +33,13 @@ TEMPLATE_DIRS = [
     # Don't forget to use absolute paths, not relative paths.
     path('templates')
 ]
+TEMPLATE_LOADERS = (
+    'jingo.Loader',
+    'django.template.loaders.filesystem.Loader',
+    'django.template.loaders.app_directories.Loader',
+    # 'django.template.loaders.eggs.Loader',
+)
+JINGO_INCLUDE_PATTERN = r'\.html'
 
 # Celery
 djcelery.setup_loader()
