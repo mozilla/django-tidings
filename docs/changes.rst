@@ -1,6 +1,16 @@
 Version History
 ===============
 
+0.4
+  * Added an initial South migration.
+
+.. warning::
+
+  If you're already using South in your project, you need to run the following
+  command to create a "fake" migration step in South's migration history::
+
+      python path/to/manage.py migrate tidings --fake
+
 0.3
   * Support excluding multiple users when calling
     :meth:`~tidings.events.Event.fire()`.
