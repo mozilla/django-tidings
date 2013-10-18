@@ -27,7 +27,8 @@ setup(
         'fabric',
         'django_nose',
         'djcelery',
-        'mock'],
+        'mock',
+        'South'],
     classifiers = [
         'Environment :: Web Environment',
         'Framework :: Django',

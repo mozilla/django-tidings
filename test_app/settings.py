@@ -19,7 +19,8 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'djcelery',
     'tidings',
-    'test_app'
+    'south',
+    'test_app',
 ]
 ROOT_URLCONF = 'test_app.urls'
 SITE_ID = 1
@@ -49,3 +50,5 @@ CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Explode loudly during tests.
 # Tidings
 TIDINGS_FROM_ADDRESS = 'nobody@example.com'
 TIDINGS_CONFIRM_ANONYMOUS_WATCHES = True
+
+SECRET_KEY = 'yada-yada'
