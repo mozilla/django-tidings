@@ -25,8 +25,8 @@ setup(
     tests_require=[
         'jingo',
         'fabric',
-        'django_nose',
-        'djcelery',
+        'django-nose',
+        'django-celery',
         'mock',
         'South'],
     classifiers = [
