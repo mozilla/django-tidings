@@ -11,7 +11,7 @@ ModelBase = import_from_setting('TIDINGS_MODEL_BASE',
                                 'django.db.models.Model')
 
 
-def multi_raw(query, params, models):
+def multi_raw(query, params, models, model_to_fields):
     """Scoop multiple model instances out of the DB at once, given a query that
     returns all fields of each.
 
@@ -24,12 +24,11 @@ def multi_raw(query, params, models):
     cursor = connections[router.db_for_read(models[0])].cursor()
     cursor.execute(query, params)
     rows = cursor.fetchall()
-    model_attnames = dict((m, [f.get_attname() for f in m._meta._fields()])
-                          for m in models)
+
     for row in rows:
         next_value = iter(row).next
         yield [model_class(**dict((a, next_value())
-                           for a in model_attnames[model_class]))
+                           for a in model_to_fields[model_class]))
                for model_class in models]
 
 
