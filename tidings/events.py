@@ -231,7 +231,15 @@ class Event(object):
                           ', '.join('%s' for e in exclude))
             params.extend(e.id for e in exclude)
 
-        model_to_fields = dict((m, [f.get_attname() for f in m._meta._fields()])
+        def get_fields(model):
+            if hasattr(model._meta, '_fields'):
+                # For django versions < 1.6
+                return model._meta._fields()
+            else:
+                # For django versions >= 1.6
+                return model._meta.fields
+
+        model_to_fields = dict((m, [f.get_attname() for f in get_fields(m)])
                                for m in [User, Watch])
         query_fields = [
             'u.{0}'.format(field) for field in model_to_fields[User]]
