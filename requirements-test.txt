@@ -1,0 +1,6 @@
+jingo
+celery
+django-celery
+django-nose
+mock
+South

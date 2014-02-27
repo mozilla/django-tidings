@@ -1,2 +1,6 @@
 docs/_build
 test.db
+.tox
+django_tidings.egg-info/
+dist/
+build/
