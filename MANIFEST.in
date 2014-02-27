@@ -1,9 +1,9 @@
 include LICENSE
 include README.rst
-include docs/*.rst
-include docs/Makefile
-include docs/make.bat
-include docs/conf.py
 include fabfile.py
-include test_app/templates/*
-include tidings/templates/tidings/*
+include tox.ini
+include requirements-test.txt
+
+recursive-include docs *.rst Makefile conf.py make.bat
+recursive-include test_app *.html
+recursive-include tidings *.html *.ltxt
