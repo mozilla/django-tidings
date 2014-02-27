@@ -14,6 +14,12 @@ happily. Here's how I do it::
 
   PYTHONPATH=/Users/erose/Checkouts/kitsune/vendor/src/celery:/Users/erose/Checkouts/kitsune/vendor/packages/mock:/Users/erose/Checkouts/kitsune/vendor/src/django:/Users/erose/Checkouts/kitsune/vendor/src/kombu:/Users/erose/Checkouts/kitsune/vendor/src/django-celery fab test
 
+You can also run all the tests with several different environment
+combinations using `tox <http://tox.readthedocs.org/en/latest/>`_::
+
+  $ pip install tox
+  $ tox
+
 
 Documentation
 =============
