@@ -10,8 +10,8 @@ from django.core.mail import EmailMessage
 
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
-from tidings.tests import watch, watch_filter, ModelsTestCase, TestCase, user
-from tidings.tests.models import MockModel
+from tidings.tests import watch, watch_filter, TestCase, user
+from tidings.tests.mockapp.models import MockModel
 
 
 TYPE = 'some event'
@@ -343,15 +343,14 @@ class NotificationTests(TestCase):
                                               flavor=7)
 
 
-class CascadingDeleteTests(ModelsTestCase):
+class CascadingDeleteTests(TestCase):
     """Cascading deletes on object_id + content_type."""
-    apps = ['tidings.tests']
-
     def test_mock_model(self):
         """Deleting an instance of MockModel should delete watches.
 
-        Create instance of MockModel from tidings.tests.models, then
-        delete it and watch the cascade go.
+        Create instance of MockModel from
+        tidings.tests.mockapp.models, then delete it and watch the
+        cascade go.
 
         """
         mock_m = MockModel.objects.create()
@@ -444,9 +443,7 @@ class MockModelEvent(InstanceEvent):
     content_type = MockModel
 
 
-class InstanceEventTests(ModelsTestCase):
-    apps = ['tidings.tests']
-
+class InstanceEventTests(TestCase):
     def _test_user_or_email(self, user_or_email):
         """Test all states of the truth table for 2 instances being watched.
 
