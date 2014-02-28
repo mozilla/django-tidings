@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'tidings',
     'south',
     'test_app',
+    'tidings.tests.mockapp',
 ]
 ROOT_URLCONF = 'test_app.urls'
 SITE_ID = 1
