@@ -3,7 +3,7 @@ from celery.task import task
 from tidings.models import Watch
 
 
-@task(rate_limit='1/m')
+@task()
 def claim_watches(user):
     """Attach any anonymous watches having a user's email to that user.
 
