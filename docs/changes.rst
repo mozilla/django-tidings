@@ -1,6 +1,12 @@
 Version History
 ===============
 
+1.0 (2015-03-03)
+  * Support Django 1.6.
+  * Fix a bug in reconstituting models under (perhaps) Django 1.5.x and up.
+  * Remove rate limit on ``claim_watches`` task.
+  * Add tox to support testing against multiple Django versions.
+
 0.4
   * Fix a deprecated celery import path.
   * Add support for newer versions of Django, and drop support for older ones.
