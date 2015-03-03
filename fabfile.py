@@ -43,3 +43,6 @@ def updoc():
     """
     doc('html')
     local('python setup.py upload_sphinx --upload-dir=docs/_build/html')
+
+def makemigrations():
+    local('test_app/manage.py makemigrations tidings')
