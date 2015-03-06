@@ -1,6 +1,9 @@
 import djcelery
 import os
 
+import django
+
+
 # Make filepaths relative to settings.
 ROOT = os.path.dirname(os.path.abspath(__file__))
 path = lambda *a: os.path.join(ROOT, *a)
@@ -19,10 +22,13 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'djcelery',
     'tidings',
-    'south',
     'test_app',
     'tidings.tests.mockapp',
 ]
+
+if django.VERSION[:2] < (1, 7):
+    INSTALLED_APPS = INSTALLED_APPS + ['south']
+
 ROOT_URLCONF = 'test_app.urls'
 SITE_ID = 1
 TEMPLATE_DEBUG = True

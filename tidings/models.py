@@ -114,8 +114,7 @@ class NotificationsMixin(models.Model):
     So we get cascading deletes for free, yay!
 
     """
-    watches = generic.GenericRelation(
-        Watch, related_name='%(app_label)s_%(class)s_watches')
+    watches = generic.GenericRelation(Watch)
 
     class Meta(object):
         abstract = True
