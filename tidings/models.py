@@ -1,4 +1,5 @@
-from django.contrib.auth.models import User, AnonymousUser
+from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
@@ -49,7 +50,7 @@ class Watch(ModelBase):
     object_id = models.PositiveIntegerField(db_index=True, null=True)
     content_object = generic.GenericForeignKey('content_type', 'object_id')
 
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
     #: Email stored only in the case of anonymous users:
     email = models.EmailField(db_index=True, null=True, blank=True)

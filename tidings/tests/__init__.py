@@ -1,7 +1,7 @@
 import random
 from string import letters
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 
 from tidings.models import Watch, WatchFilter
@@ -14,7 +14,7 @@ def user(save=False, **kwargs):
         defaults['username'] = ''.join(random.choice(letters)
                                        for x in xrange(15))
     defaults.update(kwargs)
-    u = User(**defaults)
+    u = get_user_model()(**defaults)
     if save:
         u.save()
     return u

@@ -3,7 +3,7 @@ import random
 from smtplib import SMTPException
 
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.db.models import Q
@@ -239,6 +239,7 @@ class Event(object):
                 # For django versions >= 1.6
                 return model._meta.fields
 
+        User = get_user_model()
         model_to_fields = dict((m, [f.get_attname() for f in get_fields(m)])
                                for m in [User, Watch])
         query_fields = [
@@ -249,14 +250,15 @@ class Event(object):
         query = (
             'SELECT {fields} '
             'FROM tidings_watch w '
-            'LEFT JOIN auth_user u ON u.id=w.user_id {joins} '
+            'LEFT JOIN {user_table} u ON u.id=w.user_id {joins} '
             'WHERE {wheres} '
             'AND (length(w.email)>0 OR length(u.email)>0) '
             'AND w.is_active '
             'ORDER BY u.email DESC, w.email DESC').format(
             fields=', '.join(query_fields),
             joins=' '.join(joins),
-            wheres=' AND '.join(wheres))
+            wheres=' AND '.join(wheres),
+            user_table=User._meta.db_table)
         # IIRC, the DESC ordering was something to do with the placement of
         # NULLs. Track this down and explain it.
 
