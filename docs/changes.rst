@@ -1,6 +1,10 @@
 Version History
 ===============
 
+1.1 (unreleased)
+  * Support Django 1.7
+  * Dropped support for Django 1.4, 1.5 and 1.6
+
 1.0 (2015-03-03)
   * Support Django 1.6.
   * Fix a bug in reconstituting models under (perhaps) Django 1.5.x and up.
