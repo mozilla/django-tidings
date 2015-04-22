@@ -37,15 +37,5 @@ def test():
     local('django-admin.py test tests')
 
 
-def updoc():
-    """Build Sphinx docs and upload them to packages.python.org.
-
-    Requires Sphinx-PyPI-upload to be installed.
-
-    """
-    doc('html')
-    local('python setup.py upload_sphinx --upload-dir=docs/_build/html')
-
-
 def makemigrations():
     local('django-admin.py makemigrations tidings')

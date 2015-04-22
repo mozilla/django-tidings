@@ -23,5 +23,4 @@ installations. Its features include...
 * Optional confirmation of anonymous subscriptions
 * Hook points for customizing any page drawn and any email sent
 
-Please see the full documentation at http://packages.python.org/django-tidings/
-
+Please see the full documentation at http://django-tidings.readthedocs.org/
