@@ -1,7 +1,6 @@
-from nose.tools import eq_
-
 from tidings.models import WatchFilter, EmailUser
-from tidings.tests import watch, watch_filter, TestCase
+
+from .base import watch, watch_filter, TestCase
 
 
 # TODO: write a test to ensure that event types don't collide
@@ -31,7 +30,7 @@ class WatchFilterTests(TestCase):
         """
         MAX_INT = 2 ** 32 - 1
         watch_filter(name='maxint', value=MAX_INT).save()
-        eq_(MAX_INT, WatchFilter.objects.get(name='maxint').value)
+        self.assertEquals(MAX_INT, WatchFilter.objects.get(name='maxint').value)
 
 
 class EmailUserTests(TestCase):
@@ -45,4 +44,4 @@ class EmailUserTests(TestCase):
         on it.
 
         """
-        eq_('', EmailUser().username)
+        self.assertEquals('', EmailUser().username)

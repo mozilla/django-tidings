@@ -15,21 +15,15 @@ setup(
     author='Erik Rose',
     author_email='erik@mozilla.com',
     license='BSD',
-    packages=find_packages(exclude=['ez_setup']),
+    packages=find_packages(exclude=['tests*', 'tests']),
     url='http://github.com/erikrose/django-tidings',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'django',
-        'celery>=2.1.1'],
-    tests_require=[
-        'jingo',
-        'fabric',
-        'django-nose',
-        'django-celery',
-        'mock',
-        'South'],
-    classifiers = [
+        'celery>=2.1.1'
+    ],
+    classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',

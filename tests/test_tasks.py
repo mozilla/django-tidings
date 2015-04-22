@@ -1,8 +1,6 @@
-from nose.tools import eq_
-
 from tidings.models import Watch
 from tidings.tasks import claim_watches
-from tidings.tests import watch, TestCase, user
+from .base import watch, TestCase, user
 
 
 class ClaimWatchesTests(TestCase):
@@ -26,8 +24,8 @@ class ClaimWatchesTests(TestCase):
 
         # Original anonymous watch is claimed.
         assert not Watch.objects.filter(email='some@bo.dy').exists()
-        eq_(2, Watch.objects.filter(email=None).count())
-        eq_(2, Watch.objects.filter(user=u).count())
+        self.assertEquals(2, Watch.objects.filter(email=None).count())
+        self.assertEquals(2, Watch.objects.filter(user=u).count())
 
         # No other watches are affected.
         assert Watch.objects.filter(email='no@bo.dy').exists()
@@ -49,7 +47,7 @@ class ClaimWatchesTests(TestCase):
 
         # Original anonymous watch is claimed.
         assert not Watch.objects.filter(email='some@bo.dy').exists()
-        eq_(2, Watch.objects.filter(email=None).count())
+        self.assertEquals(2, Watch.objects.filter(email=None).count())
 
         # No other watches are affected.
         assert Watch.objects.filter(email='no@bo.dy').exists()

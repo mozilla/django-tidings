@@ -1,8 +1,4 @@
 # -*- coding: utf-8 -*-
-import mock
-from nose.tools import eq_
-
-from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
@@ -10,8 +6,9 @@ from django.core.mail import EmailMessage
 
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
-from tidings.tests import watch, watch_filter, TestCase, user
-from tidings.tests.mockapp.models import MockModel
+
+from .base import watch, watch_filter, TestCase, user, override_settings
+from .mockapp.models import MockModel
 
 
 TYPE = 'some event'
@@ -46,13 +43,12 @@ class FilteredContentTypeEvent(ContentTypeEvent):
 class UsersWatchingTests(TestCase):
     """Unit tests for Event._users_watching_by_filter()"""
 
-    @staticmethod
-    def _emails_eq(addresses, event, **filters):
+    def _emails_eq(self, addresses, event, **filters):
         """Assert that the given emails are the ones watching `event`, given
         the scoping in `filters`."""
-        eq_(sorted(addresses),
-            sorted([u.email for u, w in
-                    event._users_watching_by_filter(**filters)]))
+        self.assertEquals(sorted(addresses),
+                          sorted([u.email for u, w in
+                                  event._users_watching_by_filter(**filters)]))
 
     def test_simple(self):
         """Test whether a watch scoped only by event type fires for both
@@ -123,7 +119,7 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@there.com').save()
         watch(event_type=TYPE, email='hi@there.com').save()
-        eq_(3, Watch.objects.all().count())  # We created what we meant to.
+        self.assertEquals(3, Watch.objects.all().count())  # We created what we meant to.
 
         self._emails_eq(['hi@there.com'], SimpleEvent())
 
@@ -133,12 +129,12 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
-        eq_(3, Watch.objects.all().count())  # We created what we meant to.
+        self.assertEquals(3, Watch.objects.all().count())  # We created what we meant to.
 
         addresses = [u.email
                      for u, w in SimpleEvent()._users_watching_by_filter()]
-        eq_(1, len(addresses))
-        eq_('hi@example.com', addresses[0].lower())
+        self.assertEquals(1, len(addresses))
+        self.assertEquals('hi@example.com', addresses[0].lower())
 
     def test_registered_users_favored(self):
         """When removing duplicates, make sure registered users are kept in
@@ -163,7 +159,7 @@ class UsersWatchingTests(TestCase):
 
         users_and_watches = list(SimpleEvent()._users_watching_by_filter())
         u, w = users_and_watches[0]
-        eq_('Jed', u.first_name)
+        self.assertEquals('Jed', u.first_name)
 
     def test_unique_by_email_user_selection(self):
         """Test the routine that sorts through users and watches having the
@@ -187,11 +183,11 @@ class UsersWatchingTests(TestCase):
             (user(), [watch(email='none')])]
 
         favorites = list(_unique_by_email(users_and_watches))
-        eq_(4, len(favorites))
+        self.assertEquals(4, len(favorites))
 
         # Test that we chose the correct users, where there are distinguishable
         # (registered) users to choose from:
-        eq_(['a'] * 3, [u.first_name for u, w in favorites[:3]])
+        self.assertEquals(['a'] * 3, [u.first_name for u, w in favorites[:3]])
 
     def test_unique_by_email_watch_collection(self):
         """Make sure _unique_by_email() collects all watches in each cluster."""
@@ -208,11 +204,11 @@ class UsersWatchingTests(TestCase):
         result = list(_unique_by_email(users_and_watches))
 
         _, watches = result[0]
-        eq_(set([w1, w2, w3]), set(watches))
+        self.assertEquals(set([w1, w2, w3]), set(watches))
 
         # Make sure the watches accumulator gets cleared between clusters:
         _, watches = result[1]
-        eq_(set([w4, w5, w6]), set(watches))
+        self.assertEquals(set([w4, w5, w6]), set(watches))
 
     def test_unsaved_exclude(self):
         """Excluding an unsaved user should throw a ValueError."""
@@ -224,12 +220,11 @@ class UsersWatchingTests(TestCase):
 class EventUnionTests(TestCase):
     """Tests for EventUnion"""
 
-    @staticmethod
-    def _emails_eq(addresses, event):
+    def _emails_eq(self, addresses, event):
         """Assert that the given emails are the ones watching `event`."""
-        eq_(sorted(addresses),
-            sorted([u.email for u, w in
-                    event._users_watching()]))
+        self.assertEquals(sorted(addresses),
+                          sorted([u.email for u, w in
+                                  event._users_watching()]))
 
     def test_merging(self):
         """Test that duplicate emails across multiple events get merged."""
@@ -258,23 +253,31 @@ class EventUnionTests(TestCase):
                      EventUnion(OneEvent(),
                                 AnotherEvent())._users_watching()]
 
-        eq_(2, len(addresses))
-        eq_('he@llo.com', addresses[0].lower())
+        self.assertEquals(2, len(addresses))
+        self.assertEquals('he@llo.com', addresses[0].lower())
 
-    @mock.patch.object(SimpleEvent, '_mails')
-    def test_fire(self, _mails):
+    def test_fire(self):
         """Assert firing the union gets the mails from the first event."""
-        _mails.return_value = []
+
+        class FireSimpleEvent(SimpleEvent):
+            called = False
+
+            def _mails(self, users_and_watches):
+                self.called = True
+                return []
+
         watch(event_type=TYPE, email='he@llo.com').save()
-        EventUnion(SimpleEvent(), AnotherEvent()).fire()
-        assert _mails.called
+        simple_event = FireSimpleEvent()
+        another_event = AnotherEvent()
+        EventUnion(simple_event, another_event).fire()
+        self.assertTrue(simple_event.called)
 
     def test_watch_lists(self):
         """Ensure the Union returns every watch a user has."""
         w1 = watch(event_type=TYPE, email='jeff@here.com', save=True)
         w2 = watch(event_type=TYPE, email='jeff@here.com', save=True)
         u, w = list(EventUnion(SimpleEvent())._users_watching())[0]
-        eq_([w1, w2], sorted(w, key=lambda x: x.id))
+        self.assertEquals([w1, w2], sorted(w, key=lambda x: x.id))
 
 
 class NotificationTests(TestCase):
@@ -298,8 +301,8 @@ class NotificationTests(TestCase):
         """Assure notify() returns an existing watch when possible."""
         u = user(save=True)
         w = FilteredContentTypeEvent.notify(u, color=3, flavor=4)
-        eq_(w.pk, FilteredContentTypeEvent.notify(u, color=3, flavor=4).pk)
-        eq_(1, Watch.objects.all().count())
+        self.assertEquals(w.pk, FilteredContentTypeEvent.notify(u, color=3, flavor=4).pk)
+        self.assertEquals(1, Watch.objects.all().count())
 
     def test_duplicate_tolerance(self):
         """Assure notify() returns an existing watch if there is a matching
@@ -363,38 +366,38 @@ class CascadingDeleteTests(TestCase):
 class MailTests(TestCase):
     """Tests for mail-sending and templating"""
 
-    @mock.patch.object(settings._wrapped, 'TIDINGS_CONFIRM_ANONYMOUS_WATCHES', False)
+    @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
     def test_fire(self):
         """Assert that fire() runs and that generated mails get sent."""
         SimpleEvent.notify('hi@there.com').activate().save()
         SimpleEvent().fire()
 
-        eq_(1, len(mail.outbox))
+        self.assertEquals(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        eq_(['hi@there.com'], first_mail.to)
-        eq_('Subject!', first_mail.subject)
-        eq_('Body!', first_mail.body)
+        self.assertEquals(['hi@there.com'], first_mail.to)
+        self.assertEquals('Subject!', first_mail.subject)
+        self.assertEquals('Body!', first_mail.body)
 
     def test_anonymous_notify_and_fire(self):
         """Calling notify() sends confirmation email, and calling fire() sends
         notification email."""
         w = SimpleEvent.notify('hi@there.com')
 
-        eq_(1, len(mail.outbox))
+        self.assertEquals(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        eq_(['hi@there.com'], first_mail.to)
-        eq_('TODO', first_mail.subject)
-        eq_('Activate!', first_mail.body)
+        self.assertEquals(['hi@there.com'], first_mail.to)
+        self.assertEquals('TODO', first_mail.subject)
+        self.assertEquals('Activate!', first_mail.body)
 
         w.activate().save()
         SimpleEvent().fire()
 
         second_mail = mail.outbox[1]
-        eq_(['hi@there.com'], second_mail.to)
-        eq_('Subject!', second_mail.subject)
-        eq_('Body!', second_mail.body)
+        self.assertEquals(['hi@there.com'], second_mail.to)
+        self.assertEquals('Subject!', second_mail.subject)
+        self.assertEquals('Body!', second_mail.body)
 
-    @mock.patch.object(settings._wrapped, 'TIDINGS_CONFIRM_ANONYMOUS_WATCHES', False)
+    @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
     def test_exclude(self):
         """Assert the `exclude` arg to fire() excludes the given user."""
         SimpleEvent.notify('du@de.com').activate().save()
@@ -403,12 +406,12 @@ class MailTests(TestCase):
 
         SimpleEvent().fire(exclude=registered_user)
 
-        eq_(1, len(mail.outbox))
+        self.assertEquals(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        eq_(['du@de.com'], first_mail.to)
-        eq_('Subject!', first_mail.subject)
+        self.assertEquals(['du@de.com'], first_mail.to)
+        self.assertEquals('Subject!', first_mail.subject)
 
-    @mock.patch.object(settings._wrapped, 'TIDINGS_CONFIRM_ANONYMOUS_WATCHES', False)
+    @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
     def test_exclude_multiple(self):
         """Show that passing a sequence to exclude excludes them all."""
         SimpleEvent.notify('du@de.com').activate().save()
@@ -419,8 +422,8 @@ class MailTests(TestCase):
 
         SimpleEvent().fire(exclude=[user1, user2])
 
-        eq_(1, len(mail.outbox))
-        eq_(['du@de.com'], mail.outbox[0].to)
+        self.assertEquals(1, len(mail.outbox))
+        self.assertEquals(['du@de.com'], mail.outbox[0].to)
 
 
 def test_anonymous_user_compares():

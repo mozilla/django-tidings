@@ -4,7 +4,11 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template import Context, loader
-from django.utils.importlib import import_module
+
+try:
+    from django.utils.importlib import import_module
+except ImportError:
+    from importlib import import_module
 
 
 class peekable(object):
@@ -153,7 +157,7 @@ def import_from_setting(setting_name, fallback):
     path = getattr(settings, setting_name, fallback)
     try:
         return _imported_symbol(path)
-    except (ImportError, AttributeError):
+    except (ImportError, AttributeError, ValueError):
         raise ImproperlyConfigured('No such module or attribute: %s' % path)
 
 

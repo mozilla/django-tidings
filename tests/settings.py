@@ -11,7 +11,7 @@ path = lambda *a: os.path.join(ROOT, *a)
 # Django
 DATABASES = {
     'default': {
-        'NAME': 'test.db',
+        'NAME': ':memory:',
         'ENGINE': 'django.db.backends.sqlite3',
     }
 }
@@ -22,17 +22,19 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'djcelery',
     'tidings',
-    'test_app',
-    'tidings.tests.mockapp',
+    'tests',
+    'tests.mockapp',
 ]
 
 if django.VERSION[:2] < (1, 7):
     INSTALLED_APPS = INSTALLED_APPS + ['south']
 
-ROOT_URLCONF = 'test_app.urls'
+ROOT_URLCONF = 'tests.urls'
 SITE_ID = 1
 TEMPLATE_DEBUG = True
-TEST_RUNNER = 'django_nose.runner.NoseTestSuiteRunner'
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+
+MIDDLEWARE_CLASSES = []
 
 # Jinja
 TEMPLATE_DIRS = [

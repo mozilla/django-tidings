@@ -1,9 +1,15 @@
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
+
+try:
+    from django.contrib.contenttypes.fields import (GenericForeignKey,
+                                                    GenericRelation)
+except ImportError:
+    from django.contrib.contenttypes.generic import (GenericForeignKey,
+                                                     GenericRelation)
 
 from tidings.utils import import_from_setting, reverse
 
@@ -48,7 +54,7 @@ class Watch(ModelBase):
     #: Optional reference to a content type:
     content_type = models.ForeignKey(ContentType, null=True, blank=True)
     object_id = models.PositiveIntegerField(db_index=True, null=True)
-    content_object = generic.GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
 
@@ -115,7 +121,7 @@ class NotificationsMixin(models.Model):
     So we get cascading deletes for free, yay!
 
     """
-    watches = generic.GenericRelation(Watch)
+    watches = GenericRelation(Watch)
 
     class Meta(object):
         abstract = True

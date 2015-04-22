@@ -1,0 +1,22 @@
+sudo: no
+language: python
+env:
+  matrix:
+    - TOXENV=docs
+    - TOXENV=py27-1.6
+    - TOXENV=py27-1.7
+    - TOXENV=py27-1.8
+    - TOXENV=py27-master
+  global:
+    - PIP_WHEEL_DIR=$HOME/.wheels
+    - PIP_FIND_LINKS=file://$PIP_WHEEL_DIR
+cache:
+  directories:
+    - $PIP_WHEEL_DIR
+install:
+    - mkdir -p $PIP_WHEEL_DIR
+    - pip wheel -r tests/requirements.txt coveralls
+    - pip install coveralls tox
+script:
+  - tox
+after_success: coveralls

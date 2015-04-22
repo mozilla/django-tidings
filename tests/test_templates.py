@@ -1,8 +1,7 @@
-from nose.tools import eq_
-
 from tidings.models import Watch
-from tidings.tests import watch, TestCase
 from tidings.utils import reverse
+
+from .base import watch, TestCase
 
 
 FAILURE_STRING = 'We could not find your subscription'
@@ -46,4 +45,4 @@ class UnsubscribeTests(TestCase):
         response = self.client.post(
             reverse('tidings.unsubscribe', args=[w.pk]) + '?s=' + w.secret)
         self.assertContains(response, '<h1>Unsubscribed</h1>')
-        eq_(0, Watch.objects.count())
+        self.assertEquals(0, Watch.objects.count())
