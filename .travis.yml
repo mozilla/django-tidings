@@ -5,8 +5,6 @@ env:
     - TOXENV=docs
     - TOXENV=py27-1.6
     - TOXENV=py27-1.7
-    - TOXENV=py27-1.8
-    - TOXENV=py27-master
   global:
     - PIP_WHEEL_DIR=$HOME/.wheels
     - PIP_FIND_LINKS=file://$PIP_WHEEL_DIR
