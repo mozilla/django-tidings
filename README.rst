@@ -2,6 +2,15 @@
 django-tidings
 ==============
 
+.. image:: https://img.shields.io/pypi/v/django-tidings.svg
+   :target: https://pypi.python.org/pypi/django-tidings
+
+.. image:: https://img.shields.io/travis/mozilla/django-tidings.svg
+    :target: http://travis-ci.org/mozilla/django-tidings
+
+.. image:: https://readthedocs.org/projects/django-tidings/badge/?version=latest&style=plastic
+   :target: http://django-tidings.readthedocs.org/en/latest/
+
 django-tidings is a framework for sending email notifications to users who have
 registered interest in certain events, such as the modification of some model
 object. Used by support.mozilla.com, it is optimized for large-scale
