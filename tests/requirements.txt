@@ -2,3 +2,4 @@ jingo==0.7
 celery==3.1.18
 django-celery==3.1.16
 South==1.0.2
+Fabric==1.10.1
