@@ -16,4 +16,4 @@ Documentation
 
 To build the docs, install Sphinx and run this::
 
-  fab doc
+  make docs

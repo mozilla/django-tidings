@@ -6,7 +6,8 @@ Version History
   * Dropped support for Django 1.4, 1.5 and 1.6
   * Dropped mock and django-nose for tests.
   * Moved tests outside of app and simplified test setup.
-  * Added Travis CI: 
+  * Added Travis CI: https://travis-ci.org/mozilla/django-tidings
+  * Moved to ReadTheDocs: http://django-tidings.readthedocs.org/
 
 1.0 (2015-03-03)
   * Support Django 1.6.
