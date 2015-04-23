@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-tidings',
-    version='1.0',
+    version='1.1',
     description='Framework for asynchronous email notifications from Django',
     long_description=open('README.rst').read() + \
                      # Hack symbol names out of Sphinx directives:
