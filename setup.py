@@ -7,7 +7,7 @@ setup(
     name='django-tidings',
     version='1.1',
     description='Framework for asynchronous email notifications from Django',
-    long_description=open('README.rst').read() + \
+    long_description=open('README.rst').read() + '\n' + \
                      # Hack symbol names out of Sphinx directives:
                      re.sub(r':[a-zA-Z]+:`[0-9a-zA-Z~_\.]+\.([^`]+)`',
                             r'``\1``',
