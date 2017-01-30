@@ -1,6 +1,8 @@
+*.pyc
+.python-version
+.tox
+build/
+dist/
+django_tidings.egg-info/
 docs/_build
 test.db
-.tox
-django_tidings.egg-info/
-dist/
-build/
