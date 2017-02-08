@@ -14,30 +14,30 @@ class MergeTests(TestCase):
     def test_default(self):
         """Test with the default `key` function."""
         iterables = [range(4), range(7), range(3, 6)]
-        self.assertEquals(sorted(reduce(list.__add__,
+        self.assertEqual(sorted(reduce(list.__add__,
                                         [list(it) for it in iterables])),
                           list(collate(*iterables)))
 
     def test_key(self):
         """Test using a custom `key` function."""
         iterables = [range(5, 0, -1), range(4, 0, -1)]
-        self.assertEquals(list(sorted(reduce(list.__add__,
+        self.assertEqual(list(sorted(reduce(list.__add__,
                                              [list(it) for it in iterables]),
                                       reverse=True)),
                           list(collate(*iterables, key=lambda x: -x)))
 
     def test_empty(self):
         """Be nice if passed an empty list of iterables."""
-        self.assertEquals([], list(collate()))
+        self.assertEqual([], list(collate()))
 
     def test_one(self):
         """Work when only 1 iterable is passed."""
-        self.assertEquals([0, 1], list(collate(range(2))))
+        self.assertEqual([0, 1], list(collate(range(2))))
 
     def test_reverse(self):
         """Test the `reverse` kwarg."""
         iterables = [range(4, 0, -1), range(7, 0, -1), range(3, 6, -1)]
-        self.assertEquals(sorted(reduce(list.__add__,
+        self.assertEqual(sorted(reduce(list.__add__,
                                         [list(it) for it in iterables]),
                                  reverse=True),
                           list(collate(*iterables, reverse=True)))

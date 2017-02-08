@@ -24,8 +24,8 @@ class ClaimWatchesTests(TestCase):
 
         # Original anonymous watch is claimed.
         assert not Watch.objects.filter(email='some@bo.dy').exists()
-        self.assertEquals(2, Watch.objects.filter(email=None).count())
-        self.assertEquals(2, Watch.objects.filter(user=u).count())
+        self.assertEqual(2, Watch.objects.filter(email=None).count())
+        self.assertEqual(2, Watch.objects.filter(user=u).count())
 
         # No other watches are affected.
         assert Watch.objects.filter(email='no@bo.dy').exists()
@@ -47,7 +47,7 @@ class ClaimWatchesTests(TestCase):
 
         # Original anonymous watch is claimed.
         assert not Watch.objects.filter(email='some@bo.dy').exists()
-        self.assertEquals(2, Watch.objects.filter(email=None).count())
+        self.assertEqual(2, Watch.objects.filter(email=None).count())
 
         # No other watches are affected.
         assert Watch.objects.filter(email='no@bo.dy').exists()

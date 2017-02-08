@@ -45,4 +45,4 @@ class UnsubscribeTests(TestCase):
         response = self.client.post(
             reverse('tidings.unsubscribe', args=[w.pk]) + '?s=' + w.secret)
         self.assertContains(response, '<h1>Unsubscribed</h1>')
-        self.assertEquals(0, Watch.objects.count())
+        self.assertEqual(0, Watch.objects.count())
