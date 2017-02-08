@@ -1,8 +1,9 @@
 import random
-from string import letters
+from string import ascii_letters
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase  # noqa
+from django.utils.six.moves import range
 
 try:
     from django.test import override_settings  # noqa
@@ -16,8 +17,8 @@ def user(save=False, **kwargs):
     defaults = {'password':
                     'sha1$d0fcb$661bd5197214051ed4de6da4ecdabe17f5549c7c'}
     if 'username' not in kwargs:
-        defaults['username'] = ''.join(random.choice(letters)
-                                       for x in xrange(15))
+        defaults['username'] = ''.join(random.choice(ascii_letters)
+                                       for x in range(15))
     defaults.update(kwargs)
     u = get_user_model()(**defaults)
     if save:

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template import Context, loader
+from django.utils.six import next, string_types
 
 try:
     from django.utils.importlib import import_module
@@ -40,7 +41,7 @@ class peekable(object):
         # TODO: Give peek a default arg. Raise StopIteration only when it isn't
         # provided. If it is, return the arg. Just like get('key', object())
         if not hasattr(self, '_peek'):
-            self._peek = self._it.next()
+            self._peek = next(self._it)
         return self._peek
 
     def next(self):
@@ -91,7 +92,7 @@ def hash_to_unsigned(data):
     filter values.
 
     """
-    if isinstance(data, basestring):
+    if isinstance(data, string_types):
         # Return a CRC32 value identical across Python versions and platforms
         # by stripping the sign bit as on
         # http://docs.python.org/library/zlib.html.

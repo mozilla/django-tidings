@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
+from django.utils.six.moves import range, reduce
 
 from tidings.utils import collate, import_from_setting
 
@@ -12,14 +13,14 @@ class MergeTests(TestCase):
 
     def test_default(self):
         """Test with the default `key` function."""
-        iterables = [xrange(4), xrange(7), xrange(3, 6)]
+        iterables = [range(4), range(7), range(3, 6)]
         self.assertEquals(sorted(reduce(list.__add__,
                                         [list(it) for it in iterables])),
                           list(collate(*iterables)))
 
     def test_key(self):
         """Test using a custom `key` function."""
-        iterables = [xrange(5, 0, -1), xrange(4, 0, -1)]
+        iterables = [range(5, 0, -1), range(4, 0, -1)]
         self.assertEquals(list(sorted(reduce(list.__add__,
                                              [list(it) for it in iterables]),
                                       reverse=True)),
@@ -31,11 +32,11 @@ class MergeTests(TestCase):
 
     def test_one(self):
         """Work when only 1 iterable is passed."""
-        self.assertEquals([0, 1], list(collate(xrange(2))))
+        self.assertEquals([0, 1], list(collate(range(2))))
 
     def test_reverse(self):
         """Test the `reverse` kwarg."""
-        iterables = [xrange(4, 0, -1), xrange(7, 0, -1), xrange(3, 6, -1)]
+        iterables = [range(4, 0, -1), range(7, 0, -1), range(3, 6, -1)]
         self.assertEquals(sorted(reduce(list.__add__,
                                         [list(it) for it in iterables]),
                                  reverse=True),

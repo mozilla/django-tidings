@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.mail import EmailMessage
+from django.utils.six.moves import range
 
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
@@ -140,7 +141,7 @@ class UsersWatchingTests(TestCase):
         """When removing duplicates, make sure registered users are kept in
         favor of anonymous ones having the same email address."""
         def make_anonymous_watches():
-            for x in xrange(3):
+            for x in range(3):
                 watch(event_type=TYPE, email='hi@there.com').save()
 
         # Throw some anonymous watches in there in the hope that they would
