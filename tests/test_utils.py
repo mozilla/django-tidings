@@ -9,7 +9,6 @@ from .base import TestCase, override_settings
 
 class MergeTests(TestCase):
     """Unit tests for collate()"""
-    # Also accidentally tests peekable, though that could use its own tests
 
     def test_default(self):
         """Test with the default `key` function."""
