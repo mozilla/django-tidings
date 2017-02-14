@@ -28,7 +28,7 @@ def user(save=False, **kwargs):
 
 def watch(save=False, **kwargs):
     # TODO: better defaults, when there are events available.
-    defaults = {'user': kwargs.get('user') or user(),
+    defaults = {'user': kwargs.get('user') or user(save=True),
                 'is_active': True,
                 'secret': 'abcdefghjk'}
     defaults.update(kwargs)
@@ -39,7 +39,7 @@ def watch(save=False, **kwargs):
 
 
 def watch_filter(save=False, **kwargs):
-    defaults = {'watch': kwargs.get('watch') or watch(),
+    defaults = {'watch': kwargs.get('watch') or watch(save=True),
                 'name': 'test',
                 'value': 1234}
     defaults.update(kwargs)
