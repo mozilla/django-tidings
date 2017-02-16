@@ -1,15 +1,11 @@
 from zlib import crc32
+from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template import Context, loader
 from django.utils.six import next, string_types
-
-try:
-    from django.utils.importlib import import_module
-except ImportError:
-    from importlib import import_module
 
 
 def collate(*iterables, **kwargs):
