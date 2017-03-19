@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
+from django.utils.six import next
 
 try:
     from django.contrib.contenttypes.fields import (GenericForeignKey,
@@ -33,8 +34,8 @@ def multi_raw(query, params, models, model_to_fields):
     rows = cursor.fetchall()
 
     for row in rows:
-        next_value = iter(row).next
-        yield [model_class(**dict((a, next_value())
+        row_iter = iter(row)
+        yield [model_class(**dict((a, next(row_iter))
                            for a in model_to_fields[model_class]))
                for model_class in models]
 

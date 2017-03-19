@@ -30,7 +30,7 @@ class WatchFilterTests(TestCase):
         """
         MAX_INT = 2 ** 32 - 1
         watch_filter(name='maxint', value=MAX_INT).save()
-        self.assertEquals(MAX_INT, WatchFilter.objects.get(name='maxint').value)
+        self.assertEqual(MAX_INT, WatchFilter.objects.get(name='maxint').value)
 
 
 class EmailUserTests(TestCase):
@@ -44,4 +44,4 @@ class EmailUserTests(TestCase):
         on it.
 
         """
-        self.assertEquals('', EmailUser().username)
+        self.assertEqual('', EmailUser().username)

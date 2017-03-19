@@ -1,6 +1,19 @@
-docs/_build
-test.db
-.tox
-django_tidings.egg-info/
-dist/
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
 build/
+dist/
+*.egg-info/
+
+# pyenv
+.python-version
+
+# Sphinx documentation
+docs/_build/
+
+# Unit test / coverage reports
+.tox
+test.db

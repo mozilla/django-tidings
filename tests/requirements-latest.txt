@@ -1,0 +1,4 @@
+# Latest versions of requirements
+jingo
+celery
+django-celery

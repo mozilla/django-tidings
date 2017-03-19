@@ -3,6 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.mail import EmailMessage
+from django.utils.six.moves import range
 
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
@@ -46,7 +47,7 @@ class UsersWatchingTests(TestCase):
     def _emails_eq(self, addresses, event, **filters):
         """Assert that the given emails are the ones watching `event`, given
         the scoping in `filters`."""
-        self.assertEquals(sorted(addresses),
+        self.assertEqual(sorted(addresses),
                           sorted([u.email for u, w in
                                   event._users_watching_by_filter(**filters)]))
 
@@ -119,7 +120,7 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@there.com').save()
         watch(event_type=TYPE, email='hi@there.com').save()
-        self.assertEquals(3, Watch.objects.all().count())  # We created what we meant to.
+        self.assertEqual(3, Watch.objects.all().count())  # We created what we meant to.
 
         self._emails_eq(['hi@there.com'], SimpleEvent())
 
@@ -129,18 +130,18 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
-        self.assertEquals(3, Watch.objects.all().count())  # We created what we meant to.
+        self.assertEqual(3, Watch.objects.all().count())  # We created what we meant to.
 
         addresses = [u.email
                      for u, w in SimpleEvent()._users_watching_by_filter()]
-        self.assertEquals(1, len(addresses))
-        self.assertEquals('hi@example.com', addresses[0].lower())
+        self.assertEqual(1, len(addresses))
+        self.assertEqual('hi@example.com', addresses[0].lower())
 
     def test_registered_users_favored(self):
         """When removing duplicates, make sure registered users are kept in
         favor of anonymous ones having the same email address."""
         def make_anonymous_watches():
-            for x in xrange(3):
+            for x in range(3):
                 watch(event_type=TYPE, email='hi@there.com').save()
 
         # Throw some anonymous watches in there in the hope that they would
@@ -159,7 +160,7 @@ class UsersWatchingTests(TestCase):
 
         users_and_watches = list(SimpleEvent()._users_watching_by_filter())
         u, w = users_and_watches[0]
-        self.assertEquals('Jed', u.first_name)
+        self.assertEqual('Jed', u.first_name)
 
     def test_unique_by_email_user_selection(self):
         """Test the routine that sorts through users and watches having the
@@ -183,11 +184,11 @@ class UsersWatchingTests(TestCase):
             (user(), [watch(email='none')])]
 
         favorites = list(_unique_by_email(users_and_watches))
-        self.assertEquals(4, len(favorites))
+        self.assertEqual(4, len(favorites))
 
         # Test that we chose the correct users, where there are distinguishable
         # (registered) users to choose from:
-        self.assertEquals(['a'] * 3, [u.first_name for u, w in favorites[:3]])
+        self.assertEqual(['a'] * 3, [u.first_name for u, w in favorites[:3]])
 
     def test_unique_by_email_watch_collection(self):
         """Make sure _unique_by_email() collects all watches in each cluster."""
@@ -204,11 +205,11 @@ class UsersWatchingTests(TestCase):
         result = list(_unique_by_email(users_and_watches))
 
         _, watches = result[0]
-        self.assertEquals(set([w1, w2, w3]), set(watches))
+        self.assertEqual(set([w1, w2, w3]), set(watches))
 
         # Make sure the watches accumulator gets cleared between clusters:
         _, watches = result[1]
-        self.assertEquals(set([w4, w5, w6]), set(watches))
+        self.assertEqual(set([w4, w5, w6]), set(watches))
 
     def test_unsaved_exclude(self):
         """Excluding an unsaved user should throw a ValueError."""
@@ -222,7 +223,7 @@ class EventUnionTests(TestCase):
 
     def _emails_eq(self, addresses, event):
         """Assert that the given emails are the ones watching `event`."""
-        self.assertEquals(sorted(addresses),
+        self.assertEqual(sorted(addresses),
                           sorted([u.email for u, w in
                                   event._users_watching()]))
 
@@ -253,8 +254,8 @@ class EventUnionTests(TestCase):
                      EventUnion(OneEvent(),
                                 AnotherEvent())._users_watching()]
 
-        self.assertEquals(2, len(addresses))
-        self.assertEquals('he@llo.com', addresses[0].lower())
+        self.assertEqual(2, len(addresses))
+        self.assertEqual('he@llo.com', addresses[0].lower())
 
     def test_fire(self):
         """Assert firing the union gets the mails from the first event."""
@@ -277,7 +278,7 @@ class EventUnionTests(TestCase):
         w1 = watch(event_type=TYPE, email='jeff@here.com', save=True)
         w2 = watch(event_type=TYPE, email='jeff@here.com', save=True)
         u, w = list(EventUnion(SimpleEvent())._users_watching())[0]
-        self.assertEquals([w1, w2], sorted(w, key=lambda x: x.id))
+        self.assertEqual([w1, w2], sorted(w, key=lambda x: x.id))
 
 
 class NotificationTests(TestCase):
@@ -301,8 +302,8 @@ class NotificationTests(TestCase):
         """Assure notify() returns an existing watch when possible."""
         u = user(save=True)
         w = FilteredContentTypeEvent.notify(u, color=3, flavor=4)
-        self.assertEquals(w.pk, FilteredContentTypeEvent.notify(u, color=3, flavor=4).pk)
-        self.assertEquals(1, Watch.objects.all().count())
+        self.assertEqual(w.pk, FilteredContentTypeEvent.notify(u, color=3, flavor=4).pk)
+        self.assertEqual(1, Watch.objects.all().count())
 
     def test_duplicate_tolerance(self):
         """Assure notify() returns an existing watch if there is a matching
@@ -372,30 +373,30 @@ class MailTests(TestCase):
         SimpleEvent.notify('hi@there.com').activate().save()
         SimpleEvent().fire()
 
-        self.assertEquals(1, len(mail.outbox))
+        self.assertEqual(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        self.assertEquals(['hi@there.com'], first_mail.to)
-        self.assertEquals('Subject!', first_mail.subject)
-        self.assertEquals('Body!', first_mail.body)
+        self.assertEqual(['hi@there.com'], first_mail.to)
+        self.assertEqual('Subject!', first_mail.subject)
+        self.assertEqual('Body!', first_mail.body)
 
     def test_anonymous_notify_and_fire(self):
         """Calling notify() sends confirmation email, and calling fire() sends
         notification email."""
         w = SimpleEvent.notify('hi@there.com')
 
-        self.assertEquals(1, len(mail.outbox))
+        self.assertEqual(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        self.assertEquals(['hi@there.com'], first_mail.to)
-        self.assertEquals('TODO', first_mail.subject)
-        self.assertEquals('Activate!', first_mail.body)
+        self.assertEqual(['hi@there.com'], first_mail.to)
+        self.assertEqual('TODO', first_mail.subject)
+        self.assertEqual('Activate!', first_mail.body)
 
         w.activate().save()
         SimpleEvent().fire()
 
         second_mail = mail.outbox[1]
-        self.assertEquals(['hi@there.com'], second_mail.to)
-        self.assertEquals('Subject!', second_mail.subject)
-        self.assertEquals('Body!', second_mail.body)
+        self.assertEqual(['hi@there.com'], second_mail.to)
+        self.assertEqual('Subject!', second_mail.subject)
+        self.assertEqual('Body!', second_mail.body)
 
     @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
     def test_exclude(self):
@@ -406,10 +407,10 @@ class MailTests(TestCase):
 
         SimpleEvent().fire(exclude=registered_user)
 
-        self.assertEquals(1, len(mail.outbox))
+        self.assertEqual(1, len(mail.outbox))
         first_mail = mail.outbox[0]
-        self.assertEquals(['du@de.com'], first_mail.to)
-        self.assertEquals('Subject!', first_mail.subject)
+        self.assertEqual(['du@de.com'], first_mail.to)
+        self.assertEqual('Subject!', first_mail.subject)
 
     @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
     def test_exclude_multiple(self):
@@ -422,8 +423,8 @@ class MailTests(TestCase):
 
         SimpleEvent().fire(exclude=[user1, user2])
 
-        self.assertEquals(1, len(mail.outbox))
-        self.assertEquals(['du@de.com'], mail.outbox[0].to)
+        self.assertEqual(1, len(mail.outbox))
+        self.assertEqual(['du@de.com'], mail.outbox[0].to)
 
 
 def test_anonymous_user_compares():

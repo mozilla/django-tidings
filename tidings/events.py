@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.db.models import Q
+from django.utils.six import iteritems, iterkeys, string_types
+from django.utils.six.moves import range
 
 from celery.task import task
 
@@ -136,7 +138,7 @@ class Event(object):
     def _validate_filters(cls, filters):
         """Raise a TypeError if ``filters`` contains any keys inappropriate to
         this event class."""
-        for k in filters.iterkeys():
+        for k in iterkeys(filters):
             if k not in cls.filters:
                 # Mirror "unexpected keyword argument" message:
                 raise TypeError("%s got an unsupported filter type '%s'" %
@@ -193,7 +195,7 @@ class Event(object):
             # Not a one-liner. You're welcome. :-)
             self._validate_filters(filters)
             joins, wheres, join_params, where_params = [], [], [], []
-            for n, (k, v) in enumerate(filters.iteritems()):
+            for n, (k, v) in enumerate(iteritems(filters)):
                 joins.append(
                     'LEFT JOIN tidings_watchfilter f{n} '
                     'ON f{n}.watch_id=w.id '
@@ -293,7 +295,7 @@ class Event(object):
         # number_of_filters on the Watch.
         cls._validate_filters(filters)
 
-        if isinstance(user_or_email, basestring):
+        if isinstance(user_or_email, string_types):
             user_condition = Q(email=user_or_email)
         elif not user_or_email.is_anonymous():
             user_condition = Q(user=user_or_email)
@@ -318,7 +320,7 @@ class Event(object):
         # of filters in each Watch row or try a GROUP BY.
 
         # Apply 1-to-many filters:
-        for k, v in filters.iteritems():
+        for k, v in iteritems(filters):
             watches = watches.filter(filters__name=k,
                                      filters__value=hash_to_unsigned(v))
 
@@ -384,14 +386,14 @@ class Event(object):
             if cls.content_type:
                 create_kwargs['content_type'] = \
                     ContentType.objects.get_for_model(cls.content_type)
-            create_kwargs['email' if isinstance(user_or_email_, basestring)
+            create_kwargs['email' if isinstance(user_or_email_, string_types)
                           else 'user'] = user_or_email_
             # Letters that can't be mistaken for other letters or numbers in
             # most fonts, in case people try to type these:
             distinguishable_letters = \
                 'abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNPQRTUVWXYZ'
             secret = ''.join(random.choice(distinguishable_letters)
-                             for x in xrange(10))
+                             for x in range(10))
             # Registered users don't need to confirm, but anonymous users do.
             is_active = ('user' in create_kwargs or
                           not settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES)
@@ -402,7 +404,7 @@ class Event(object):
                 is_active=is_active,
                 event_type=cls.event_type,
                 **create_kwargs)
-            for k, v in filters.iteritems():
+            for k, v in iteritems(filters):
                 WatchFilter.objects.create(watch=watch, name=k,
                                            value=hash_to_unsigned(v))
         # Send email for inactive watches.
@@ -411,7 +413,7 @@ class Event(object):
             message = cls._activation_email(watch, email)
             try:
                 message.send()
-            except SMTPException, e:
+            except SMTPException as e:
                 watch.delete()
                 raise ActivationRequestFailed(e.recipients)
         return watch
@@ -541,9 +543,13 @@ class EventUnion(Event):
 
     def _users_watching(self, **kwargs):
         # Get a sorted iterable of user-watches pairs:
+        def email_key(pair):
+            user, watch = pair
+            return user.email.lower()
+
         users_and_watches = collate(
             *[e._users_watching(**kwargs) for e in self.events],
-            key=lambda (user, watch): user.email.lower(),
+            key=email_key,
             reverse=True)
 
         # Pick the best User out of each cluster of identical email addresses:
