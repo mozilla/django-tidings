@@ -23,8 +23,8 @@ def unsubscribe(request, watch_id):
     # Grab the watch and secret; complain if either is wrong:
     try:
         watch = Watch.objects.get(pk=watch_id)
-        secret = request.GET.get('s')  # 's' is for 'secret' but saves wrapping
-                                       # in mails
+        # 's' is for 'secret' but saves wrapping in mails
+        secret = request.GET.get('s')
         if secret != watch.secret:
             raise Watch.DoesNotExist
     except Watch.DoesNotExist:

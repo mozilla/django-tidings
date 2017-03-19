@@ -3,15 +3,21 @@ import re
 from setuptools import setup, find_packages
 
 
+def long_description():
+    readme = open('README.rst').read()
+    raw_changes = open('docs/changes.rst').read()
+    # Hack symbol names out of Sphinx directives:
+    changes = re.sub(r':[a-zA-Z]+:`[0-9a-zA-Z~_\.]+\.([^`]+)`',
+                     r'``\1``',
+                     raw_changes)
+    return readme + '\n' + changes
+
+
 setup(
     name='django-tidings',
     version='1.1',
     description='Framework for asynchronous email notifications from Django',
-    long_description=open('README.rst').read() + '\n' + \
-                     # Hack symbol names out of Sphinx directives:
-                     re.sub(r':[a-zA-Z]+:`[0-9a-zA-Z~_\.]+\.([^`]+)`',
-                            r'``\1``',
-                            open('docs/changes.rst').read()),
+    long_description=long_description(),
     author='Erik Rose',
     author_email='erik@mozilla.com',
     license='BSD',

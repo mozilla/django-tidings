@@ -65,7 +65,8 @@ def _unique_by_email(users_and_watches):
             # Starting a new cluster.
             if cluster_email != '':
                 # Ship the favorites from the previous cluster:
-                yield ensure_user_has_email(favorite_user, cluster_email), watches
+                yield (ensure_user_has_email(favorite_user, cluster_email),
+                       watches)
             favorite_user, watches = u, []
             cluster_email = row_email
         elif ((not favorite_user.email or u.is_anonymous()) and
@@ -199,7 +200,7 @@ class Event(object):
                 joins.append(
                     'LEFT JOIN tidings_watchfilter f{n} '
                     'ON f{n}.watch_id=w.id '
-                        'AND f{n}.name=%s'.format(n=n))
+                    'AND f{n}.name=%s'.format(n=n))
                 join_params.append(k)
                 wheres.append('(f{n}.value=%s '
                               'OR f{n}.value IS NULL)'.format(n=n))
@@ -269,7 +270,8 @@ class Event(object):
         # same function to union already-list-enclosed pairs from individual
         # events.
         return _unique_by_email((u, [w]) for u, w in
-                                multi_raw(query, params, [User, Watch], model_to_fields))
+                                multi_raw(query, params, [User, Watch],
+                                          model_to_fields))
 
     @classmethod
     def _watches_belonging_to_user(cls, user_or_email, object_id=None,
@@ -305,12 +307,9 @@ class Event(object):
         # Filter by stuff in the Watch row:
         watches = getattr(Watch, 'uncached', Watch.objects).filter(
             user_condition,
-            Q(content_type=ContentType.objects.get_for_model(cls.content_type))
-                if cls.content_type
-                else Q(),
-            Q(object_id=object_id)
-                if object_id
-                else Q(),
+            Q(content_type=ContentType.objects.get_for_model(
+                cls.content_type)) if cls.content_type else Q(),
+            Q(object_id=object_id) if object_id else Q(),
             event_type=cls.event_type).extra(
                 where=['(SELECT count(*) FROM tidings_watchfilter WHERE '
                        'tidings_watchfilter.watch_id='
@@ -396,7 +395,7 @@ class Event(object):
                              for x in range(10))
             # Registered users don't need to confirm, but anonymous users do.
             is_active = ('user' in create_kwargs or
-                          not settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES)
+                         not settings.TIDINGS_CONFIRM_ANONYMOUS_WATCHES)
             if object_id:
                 create_kwargs['object_id'] = object_id
             watch = Watch.objects.create(
@@ -564,7 +563,9 @@ class InstanceEvent(Event):
 
     """
     def __init__(self, instance, *args, **kwargs):
-        """:arg instance: the instance someone would have to be watching in order to be notified when this event is fired"""
+        """:arg instance: the instance someone would have to be watching in
+        order to be notified when this event is fired
+        """
         super(InstanceEvent, self).__init__(*args, **kwargs)
         self.instance = instance
 

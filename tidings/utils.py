@@ -74,9 +74,9 @@ def hash_to_unsigned(data):
         return int(data)
 
 
-def emails_with_users_and_watches(subject, template_path, vars,
-    users_and_watches, from_email=settings.TIDINGS_FROM_ADDRESS,
-    **extra_kwargs):
+def emails_with_users_and_watches(
+        subject, template_path, vars, users_and_watches,
+        from_email=settings.TIDINGS_FROM_ADDRESS, **extra_kwargs):
     """Return iterable of EmailMessages with user and watch values substituted.
 
     A convenience function for generating emails by repeatedly rendering a
@@ -92,8 +92,11 @@ def emails_with_users_and_watches(subject, template_path, vars,
     context = Context(vars)
     for u, w in users_and_watches:
         context['user'] = u
-        context['watch'] = w[0]  # Arbitrary single watch for compatibility
-                                 # with 0.1. TODO: remove.
+
+        # Arbitrary single watch for compatibility with 0.1
+        # TODO: remove.
+        context['watch'] = w[0]
+
         context['watches'] = w
         yield EmailMessage(subject,
                            template.render(context),
