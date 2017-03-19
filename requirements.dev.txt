@@ -1,0 +1,10 @@
+# Testing and development requirements
+-r tests/requirements-1.8.txt
+Django<1.9
+check-manifest
+coverage
+flake8
+pyroma
+tox
+twine
+wheel
