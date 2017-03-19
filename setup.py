@@ -22,13 +22,14 @@ setup(
     author_email='erik@mozilla.com',
     license='BSD',
     packages=find_packages(exclude=['tests*', 'tests']),
-    url='http://github.com/erikrose/django-tidings',
+    url='http://github.com/mozilla/django-tidings',
     include_package_data=True,
     zip_safe=False,
     install_requires=[
         'django',
-        'celery>=2.1.1'
+        'celery>=3.1'
     ],
+    keywords="django-tidings tidings email notifications",
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
@@ -37,6 +38,12 @@ setup(
         'Natural Language :: English',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Communications :: Email',
         'Topic :: Software Development :: Libraries :: Python Modules'],
 )
