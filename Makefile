@@ -61,13 +61,13 @@ release: clean sdist
 	twine register dist/*.tar.gz
 	twine register dist/*.whl
 	twine upload dist/*
-	python -m webbrowser -n https://pypi.python.org/pypi/django-dnt
+	python -m webbrowser -n https://pypi.python.org/pypi/django-tidings
 
 # Add [test] section to ~/.pypirc, https://testpypi.python.org/pypi
 test-release: clean sdist
 	twine register --repository test dist/*.tar.gz
 	twine register --repository test dist/*.whl
 	twine upload --repository test dist/*
-	python -m webbrowser -n https://testpypi.python.org/pypi/django-dnt
+	python -m webbrowser -n https://testpypi.python.org/pypi/django-tidings
 
 .PHONY: help clean coverage coveragehtml develop lint qa qa-all release sdist test test-all test-release

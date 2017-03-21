@@ -6,7 +6,7 @@ Testing
 =======
 
 To run django-tidings' tests, install
-`tox <http://tox.readthedocs.org/en/latest/>`_ and run it::
+`tox <https://tox.readthedocs.io/en/latest/>`_ and run it::
 
   $ pip install tox
   $ tox

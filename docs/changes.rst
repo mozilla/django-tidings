@@ -1,13 +1,17 @@
 Version History
 ===============
 
+1.2 (2017-03-21)
+  * Added support for Django 1.8 and Python 3
+  * Dropped support for Python 2.6
+
 1.1 (2015-04-23)
   * Added support for Django 1.7
   * Dropped support for Django 1.4, 1.5 and 1.6
   * Dropped mock, Fabric and django-nose dependencies.
   * Moved tests outside of app and simplified test setup.
   * Added Travis CI: https://travis-ci.org/mozilla/django-tidings
-  * Moved to ReadTheDocs: http://django-tidings.readthedocs.org/
+  * Moved to ReadTheDocs: https://django-tidings.readthedocs.io/
 
 1.0 (2015-03-03)
   * Support Django 1.6.
