@@ -2,21 +2,37 @@ import re
 
 from setuptools import setup, find_packages
 
+description = 'Framework for asynchronous email notifications from Django'
+
 
 def long_description():
-    readme = open('README.rst').read()
+    raw_readme = open('README.rst').read()
+    body_tag = ".. Omit badges from docs"
+    readme = raw_readme[raw_readme.index(body_tag) + len(body_tag) + 1:]
     raw_changes = open('docs/changes.rst').read()
     # Hack symbol names out of Sphinx directives:
     changes = re.sub(r':[a-zA-Z]+:`[0-9a-zA-Z~_\.]+\.([^`]+)`',
                      r'``\1``',
                      raw_changes)
-    return readme + '\n' + changes
+    return """\
+%(title_mark)s
+%(title)s
+%(title_mark)s
+%(readme)s
+
+%(changes)s
+""" % {
+            'title_mark': '=' * len(description),
+            'title': description,
+            'readme': readme,
+            'changes': changes,
+        }
 
 
 setup(
     name='django-tidings',
     version='1.1',
-    description='Framework for asynchronous email notifications from Django',
+    description=description,
     long_description=long_description(),
     author='Erik Rose',
     author_email='erik@mozilla.com',
