@@ -15,7 +15,7 @@ from tidings.models import Watch, WatchFilter
 
 def user(save=False, **kwargs):
     defaults = {'password':
-                    'sha1$d0fcb$661bd5197214051ed4de6da4ecdabe17f5549c7c'}
+                'sha1$d0fcb$661bd5197214051ed4de6da4ecdabe17f5549c7c'}
     if 'username' not in kwargs:
         defaults['username'] = ''.join(random.choice(ascii_letters)
                                        for x in range(15))

@@ -3,7 +3,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
-from django.utils.six import next
+from django.utils.six import next, text_type
 
 try:
     from django.contrib.contenttypes.fields import (GenericForeignKey,
@@ -71,8 +71,9 @@ class Watch(ModelBase):
         # TODO: Trace event_type back to find the Event subclass, and ask it
         # how to describe me in English.
         rest = self.content_object or self.content_type or self.object_id
-        return u'id=%s, type=%s, content_object=%s' % (self.pk, self.event_type,
-                                                       unicode(rest))
+        return u'id=%s, type=%s, content_object=%s' % (self.pk,
+                                                       self.event_type,
+                                                       text_type(rest))
 
     def activate(self):
         """Enable this watch so it actually fires.

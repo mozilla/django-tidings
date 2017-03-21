@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 from south.db import db
 from south.v2 import SchemaMigration
 

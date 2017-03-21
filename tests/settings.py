@@ -6,7 +6,11 @@ import django
 
 # Make filepaths relative to settings.
 ROOT = os.path.dirname(os.path.abspath(__file__))
-path = lambda *a: os.path.join(ROOT, *a)
+
+
+def path(*a):
+    return os.path.join(ROOT, *a)
+
 
 # Django
 DATABASES = {

@@ -15,5 +15,8 @@ dist/
 docs/_build/
 
 # Unit test / coverage reports
+htmlcov/
 .tox
 test.db
+.coverage
+.coverage.*

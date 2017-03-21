@@ -48,8 +48,8 @@ class UsersWatchingTests(TestCase):
         """Assert that the given emails are the ones watching `event`, given
         the scoping in `filters`."""
         self.assertEqual(sorted(addresses),
-                          sorted([u.email for u, w in
-                                  event._users_watching_by_filter(**filters)]))
+                         sorted([u.email for u, w in
+                                 event._users_watching_by_filter(**filters)]))
 
     def test_simple(self):
         """Test whether a watch scoped only by event type fires for both
@@ -120,7 +120,8 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@there.com').save()
         watch(event_type=TYPE, email='hi@there.com').save()
-        self.assertEqual(3, Watch.objects.all().count())  # We created what we meant to.
+        # We created what we meant to.
+        self.assertEqual(3, Watch.objects.all().count())
 
         self._emails_eq(['hi@there.com'], SimpleEvent())
 
@@ -130,7 +131,8 @@ class UsersWatchingTests(TestCase):
               save=True)
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
         watch(event_type=TYPE, email='hi@EXAMPLE.com').save()
-        self.assertEqual(3, Watch.objects.all().count())  # We created what we meant to.
+        # We created what we meant to.
+        self.assertEqual(3, Watch.objects.all().count())
 
         addresses = [u.email
                      for u, w in SimpleEvent()._users_watching_by_filter()]
@@ -191,7 +193,7 @@ class UsersWatchingTests(TestCase):
         self.assertEqual(['a'] * 3, [u.first_name for u, w in favorites[:3]])
 
     def test_unique_by_email_watch_collection(self):
-        """Make sure _unique_by_email() collects all watches in each cluster."""
+        """Ensure _unique_by_email() collects all watches in each cluster."""
         w1, w2, w3 = watch(), watch(), watch(email='hi')
         w4, w5, w6 = watch(), watch(), watch(email='lo')
         users_and_watches = [
@@ -224,8 +226,8 @@ class EventUnionTests(TestCase):
     def _emails_eq(self, addresses, event):
         """Assert that the given emails are the ones watching `event`."""
         self.assertEqual(sorted(addresses),
-                          sorted([u.email for u, w in
-                                  event._users_watching()]))
+                         sorted([u.email for u, w in
+                                 event._users_watching()]))
 
     def test_merging(self):
         """Test that duplicate emails across multiple events get merged."""
@@ -302,7 +304,9 @@ class NotificationTests(TestCase):
         """Assure notify() returns an existing watch when possible."""
         u = user(save=True)
         w = FilteredContentTypeEvent.notify(u, color=3, flavor=4)
-        self.assertEqual(w.pk, FilteredContentTypeEvent.notify(u, color=3, flavor=4).pk)
+        self.assertEqual(w.pk,
+                         FilteredContentTypeEvent.notify(u, color=3,
+                                                         flavor=4).pk)
         self.assertEqual(1, Watch.objects.all().count())
 
     def test_duplicate_tolerance(self):

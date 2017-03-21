@@ -1,9 +1,13 @@
 include LICENSE
 include README.rst
 include Makefile
+include requirements.dev.txt
 include tox.ini
 include tests/requirements.txt
 
 recursive-include docs *.rst Makefile conf.py make.bat requirements.txt
-recursive-include tests *
-recursive-include tidings *.html *.ltxt
+recursive-include tests *.py *.html *.txt
+recursive-include tidings *.py *.html *.ltxt
+
+recursive-exclude tests *.pyc
+recursive-exclude tidings *.pyc

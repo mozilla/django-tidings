@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# flake8: noqa
 #
 # django-tidings documentation build configuration file, created by
 # sphinx-quickstart on Thu Mar 31 13:40:27 2011.
