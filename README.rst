@@ -6,7 +6,10 @@ django-tidings
    :target: https://pypi.python.org/pypi/django-tidings
 
 .. image:: https://img.shields.io/travis/mozilla/django-tidings.svg
-    :target: http://travis-ci.org/mozilla/django-tidings
+   :target: http://travis-ci.org/mozilla/django-tidings
+
+.. image:: https://img.shields.io/coveralls/mozilla/django-tidings.svg
+   :target: https://coveralls.io/github/mozilla/django-tidings
 
 .. image:: https://readthedocs.org/projects/django-tidings/badge/?version=latest&style=plastic
    :target: http://django-tidings.readthedocs.org/en/latest/
