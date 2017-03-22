@@ -1,6 +1,9 @@
 Version History
 ===============
 
+2.0 (To Be Released)
+  * Dropped support for Django 1.7 and South
+
 1.2 (2017-03-22)
   * Added support for Django 1.8 and Python 3
   * Dropped support for Python 2.6
