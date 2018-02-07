@@ -2,7 +2,9 @@ Version History
 ===============
 
 2.0 (To Be Released)
-  * Dropped support for Django 1.7 and South
+  * Dropped support for Django 1.7 and South.
+  * Migrates Watch.email from a maximum length of 75 to 254, to follow the
+    EmailField update in Django 1.8.
 
 1.2 (2017-03-22)
   * Added support for Django 1.8 and Python 3
