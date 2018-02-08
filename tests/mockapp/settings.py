@@ -1,4 +1,3 @@
-import djcelery
 import os
 
 import django
@@ -24,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sites',
-    'djcelery',
     'tidings',
     'tests',
     'tests.mockapp',
@@ -56,9 +54,8 @@ TEMPLATE_LOADERS = (
 JINGO_INCLUDE_PATTERN = r'\.html'
 
 # Celery
-djcelery.setup_loader()
-CELERY_ALWAYS_EAGER = True
-CELERY_EAGER_PROPAGATES_EXCEPTIONS = True  # Explode loudly during tests.
+CELERY_TASK_ALWAYS_EAGER = True
+CELERY_TASK_EAGER_PROPAGATES = True  # Explode loudly during tests.
 
 # Tidings
 TIDINGS_FROM_ADDRESS = 'nobody@example.com'

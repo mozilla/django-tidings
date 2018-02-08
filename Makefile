@@ -1,4 +1,4 @@
-export DJANGO_SETTINGS_MODULE = tests.settings
+export DJANGO_SETTINGS_MODULE = tests.mockapp.settings
 export PYTHONPATH := $(shell pwd)
 
 help:
