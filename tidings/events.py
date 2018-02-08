@@ -112,7 +112,7 @@ class Event(object):
         """Notify everyone watching the event.
 
         We are explicit about sending notifications; we don't just key off
-        creation signals, because the receiver of a post_save signal has no
+        creation signals, because the receiver of a ``post_save`` signal has no
         idea what just changed, so it doesn't know which notifications to send.
         Also, we could easily send mail accidentally: for instance, during
         tests. If we want implicit event firing, we can always register a
@@ -569,11 +569,12 @@ class InstanceEvent(Event):
 
     Subclasses must specify an ``event_type`` and should specify a
     ``content_type``.
-
     """
     def __init__(self, instance, *args, **kwargs):
-        """:arg instance: the instance someone would have to be watching in
-        order to be notified when this event is fired
+        """Initialize an InstanceEvent
+
+        :arg instance: the instance someone would have to be watching in
+          order to be notified when this event is fired.
         """
         super(InstanceEvent, self).__init__(*args, **kwargs)
         self.instance = instance
