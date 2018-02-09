@@ -2,6 +2,7 @@ Version History
 ===============
 
 2.0 (To Be Released)
+  * Added support for Django 1.9, 1.10, 1.11, and 2.0.
   * Dropped support for Django 1.7 and South.
   * Dropped support for jingo_. Templates for the ``unsubscribe`` view are now
     standard Django templates.
