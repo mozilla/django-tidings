@@ -33,25 +33,9 @@ if django.VERSION[:2] < (1, 7):
 
 ROOT_URLCONF = 'tests.urls'
 SITE_ID = 1
-TEMPLATE_DEBUG = True
 TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 MIDDLEWARE_CLASSES = []
-
-# Jinja
-TEMPLATE_DIRS = [
-    # Put strings here, like "/home/html/django_templates"
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-    path('templates')
-]
-TEMPLATE_LOADERS = (
-    'jingo.Loader',
-    'django.template.loaders.filesystem.Loader',
-    'django.template.loaders.app_directories.Loader',
-    # 'django.template.loaders.eggs.Loader',
-)
-JINGO_INCLUDE_PATTERN = r'\.html'
 
 # Celery
 CELERY_TASK_ALWAYS_EAGER = True

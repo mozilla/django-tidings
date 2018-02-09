@@ -1,3 +1,2 @@
 # Latest versions of requirements
-jingo
 celery

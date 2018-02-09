@@ -12,13 +12,14 @@ def unsubscribe(request, watch_id):
     wrong). POST will actually delete the watch (again, if the secret is
     correct).
 
-    The templates assume use of the Jinja templating engine via jingo.Loader
-    and the presence of a ``base.html`` template containing a ``content``
-    block.
+    Uses these templates:
 
-    If you aren't using Jinja via jingo.Loader, you can replace the templates
-    with your own django templates.
+    * tidings/unsubscribe.html - Asks user to confirm deleting a watch
+    * tidings/unsubscribe_error.html - Shown when a watch is not found
+    * tidings/unsubscribe_success.html - Shown when a watch is deleted
 
+    The shipped templates assume a ``head_title`` and a ``content`` block
+    in a ``base.html`` template.
     """
     # Grab the watch and secret; complain if either is wrong:
     try:
