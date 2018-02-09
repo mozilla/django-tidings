@@ -19,6 +19,14 @@ INSTALLED_APPS = [
 ROOT_URLCONF = 'tests.urls'
 SECRET_KEY = 'yada-yada'
 SITE_ID = 1
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {},
+    },
+]
 
 # Celery
 CELERY_TASK_ALWAYS_EAGER = True
