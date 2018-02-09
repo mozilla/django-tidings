@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 
 from tidings.models import Watch
@@ -20,7 +21,12 @@ def unsubscribe(request, watch_id):
 
     The shipped templates assume a ``head_title`` and a ``content`` block
     in a ``base.html`` template.
+
+    The template extension can be changed from the default ``html`` using
+    the setting :data:`~django.conf.settings.TIDINGS_TEMPLATE_EXTENSION`.
     """
+    ext = getattr(settings, 'TIDINGS_TEMPLATE_EXTENSION', 'html')
+
     # Grab the watch and secret; complain if either is wrong:
     try:
         watch = Watch.objects.get(pk=watch_id)
@@ -29,10 +35,10 @@ def unsubscribe(request, watch_id):
         if secret != watch.secret:
             raise Watch.DoesNotExist
     except Watch.DoesNotExist:
-        return render(request, 'tidings/unsubscribe_error.html')
+        return render(request, 'tidings/unsubscribe_error.' + ext)
 
     if request.method == 'POST':
         watch.delete()
-        return render(request, 'tidings/unsubscribe_success.html')
+        return render(request, 'tidings/unsubscribe_success.' + ext)
 
-    return render(request, 'tidings/unsubscribe.html')
+    return render(request, 'tidings/unsubscribe.' + ext)

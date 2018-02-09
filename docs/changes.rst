@@ -7,6 +7,9 @@ Version History
     standard Django templates.
   * Added ``Event.fire(delay=False)``, to avoid using the
     pickle serializer, which has `security concerns`_.
+  * Added setting ``TIDINGS_TEMPLATE_EXTENSION`` to allow changing the
+    template extension used by the ``unsubscribe`` view from ``html`` to
+    ``jinja``, ``j2``, etc.
   * Migrated Watch.email from a maximum length of 75 to 254, to follow the
     EmailField update in Django 1.8.
 

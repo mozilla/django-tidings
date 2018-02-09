@@ -62,3 +62,22 @@ django-tidings offers several Django settings to customize its behavior:
   Example::
     
     TIDINGS_REVERSE = 'sumo.urlresolvers.reverse'
+
+
+.. data:: TIDINGS_TEMPLATE_EXTENSION
+
+  The extension for tidings view templates. It can be changed to support
+  alternate template libraries like django-jinja_.  The extension is
+  used in the :func:`~tidings.views.unsubscribe` view:
+
+  * ``'tidings/unsubscribe.'`` + ``TIDINGS_TEMPLATE_EXTENSION``
+  * ``'tidings/unsubscribe_error.'`` + ``TIDINGS_TEMPLATE_EXTENSION``
+  * ``'tidings/unsubscribe_success.'`` + ``TIDINGS_TEMPLATE_EXTENSION``
+
+  Default: ``'html'``
+
+  Example::
+
+     TIDINGS_TEMPLATE_EXTENSION = 'jinja'
+
+.. _django-jinja: http://niwinz.github.io/django-jinja/latest/
