@@ -1,6 +1,6 @@
 from collections import Sequence
-import random
 from smtplib import SMTPException
+import random
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -108,11 +108,11 @@ class Event(object):
     #: ``set(['color', 'flavor'])``
     filters = set()
 
-    def fire(self, exclude=None):
-        """Asynchronously notify everyone watching the event.
+    def fire(self, exclude=None, delay=True):
+        """Notify everyone watching the event.
 
         We are explicit about sending notifications; we don't just key off
-        creation signals, because the receiver of a post_save signal has no
+        creation signals, because the receiver of a ``post_save`` signal has no
         idea what just changed, so it doesn't know which notifications to send.
         Also, we could easily send mail accidentally: for instance, during
         tests. If we want implicit event firing, we can always register a
@@ -122,9 +122,18 @@ class Event(object):
           notified, though anonymous notifications having the same email
           address may still be sent. A sequence of users may also be passed in.
 
+        :arg delay: If True (default), the event is handled asynchronously with
+          Celery. This requires the pickle task serializer, which is no longer
+          the default starting in Celery 4.0. If False, the event is processed
+          immediately.
         """
-        # Tasks don't receive the `self` arg implicitly.
-        self._fire_task.delay(self, exclude=exclude)
+        if delay:
+            # Tasks don't receive the `self` arg implicitly.
+            self._fire_task.apply_async(
+                kwargs={'self': self, 'exclude': exclude},
+                serializer='pickle')
+        else:
+            self._fire_task(self, exclude=exclude)
 
     @task
     def _fire_task(self, exclude=None):
@@ -560,11 +569,12 @@ class InstanceEvent(Event):
 
     Subclasses must specify an ``event_type`` and should specify a
     ``content_type``.
-
     """
     def __init__(self, instance, *args, **kwargs):
-        """:arg instance: the instance someone would have to be watching in
-        order to be notified when this event is fired
+        """Initialize an InstanceEvent
+
+        :arg instance: the instance someone would have to be watching in
+          order to be notified when this event is fired.
         """
         super(InstanceEvent, self).__init__(*args, **kwargs)
         self.instance = instance

@@ -346,3 +346,60 @@ Since ``NewPostInForumEvent`` will now be fired only from an
 :class:`~tidings.events.EventUnion` (and not as the first argument), it can get
 away without a ``_mails`` implementation. The container pattern is very
 slimming, both to callers and events.
+
+Celery and Safe Asynchronous Tasks
+----------------------------------
+Sending emails can be a slow process. By default,
+:meth:`Event.fire() <tidings.events.Event.fire>` uses Celery_ to process
+the event asynchronously. The user's request is faster, and the emails can
+take as long as they need.  This requires the pickle_ `task serializer`_,
+which has `security concerns`_.  `Celery 3.1`_ is
+`the last version to enable pickle by default`_, and in `Celery 4.0`_,
+`JSON is the default serializer`_.
+
+.. _`Celery`: http://docs.celeryproject.org/en/latest/index.html
+.. _`pickle`: https://docs.python.org/3/library/pickle.html
+.. _`task serializer`: http://docs.celeryproject.org/en/latest/userguide/calling.html#calling-serializers
+.. _`security concerns`: http://docs.celeryproject.org/en/latest/userguide/security.html#serializers
+.. _`Celery 3.1`: http://docs.celeryproject.org/en/latest/whatsnew-3.1.html
+.. _`the last version to enable Pickle by default`: http://docs.celeryproject.org/en/latest/whatsnew-3.1.html#last-version-to-enable-pickle-by-default
+.. _`Celery 4.0`: http://docs.celeryproject.org/en/latest/whatsnew-4.0.html
+.. _`json is the default serializer`: http://docs.celeryproject.org/en/latest/whatsnew-4.0.html#json-is-now-the-default-serializer
+
+
+You can avoid using ``pickle`` by calling ``fire()`` synchronously::
+
+
+    MyEvent().fire(delay=False)
+
+
+This will process the event and send any emails, which could take a long time.
+You can move event processing to the backend by writing your own task::
+
+    from celery.task import task
+
+    @task
+    def fire_myevent():
+        MyEvent().fire(delay=False)
+
+
+    # Process an event
+    fire_myevent()
+
+This can also be used with instance-based events, by loading the instance from
+the database inside of the task::
+
+    from celery.task import task
+    from myapp.models import Instance
+
+    @task
+    def fire_myinstanceevent(instance_id):
+        instance = Instance.objects.get(instance_id)
+        MyInstance(instance).fire(delay=False)
+
+
+    # Process an event
+    fire_myinstanceevent(instance.id)
+
+This will allow you to process events asynchronously, and to use safer
+serializers like the JSON serializer.

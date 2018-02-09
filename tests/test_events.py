@@ -372,16 +372,23 @@ class MailTests(TestCase):
     """Tests for mail-sending and templating"""
 
     @override_settings(TIDINGS_CONFIRM_ANONYMOUS_WATCHES=False)
-    def test_fire(self):
+    def test_fire(self, delay=True):
         """Assert that fire() runs and that generated mails get sent."""
         SimpleEvent.notify('hi@there.com').activate().save()
-        SimpleEvent().fire()
+        SimpleEvent().fire(delay=delay)
 
         self.assertEqual(1, len(mail.outbox))
         first_mail = mail.outbox[0]
         self.assertEqual(['hi@there.com'], first_mail.to)
         self.assertEqual('Subject!', first_mail.subject)
         self.assertEqual('Body!', first_mail.body)
+
+    def test_fire_no_delay(self):
+        """Assert that file(delay=False) also sends emails.
+
+        This processes the event synronously, rather than as a Celery task.
+        """
+        self.test_fire(delay=False)
 
     def test_anonymous_notify_and_fire(self):
         """Calling notify() sends confirmation email, and calling fire() sends
