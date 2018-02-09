@@ -3,12 +3,18 @@ Version History
 
 2.0 (To Be Released)
   * Dropped support for Django 1.7 and South.
+  * Dropped support for jingo_. Templates for the ``unsubscribe`` view are now
+    standard Django templates.
   * Added ``Event.fire(delay=False)``, to avoid using the
     pickle serializer, which has `security concerns`_.
+  * Added setting ``TIDINGS_TEMPLATE_EXTENSION`` to allow changing the
+    template extension used by the ``unsubscribe`` view from ``html`` to
+    ``jinja``, ``j2``, etc.
   * Migrated Watch.email from a maximum length of 75 to 254, to follow the
     EmailField update in Django 1.8.
 
 .. _`security concerns`: http://docs.celeryproject.org/en/latest/userguide/security.html#serializers
+.. _jingo: https://github.com/jbalogh/jingo
 
 1.2 (2017-03-22)
   * Added support for Django 1.8 and Python 3
