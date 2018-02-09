@@ -27,7 +27,7 @@ Version History
   * Dropped mock, Fabric and django-nose dependencies.
   * Moved tests outside of app and simplified test setup.
   * Added Travis CI: https://travis-ci.org/mozilla/django-tidings
-  * Moved to ReadTheDocs: https://django-tidings.readthedocs.io/
+  * Moved to ReadTheDocs: https://django-tidings.readthedocs.io/en/latest/
 
 1.0 (2015-03-03)
   * Support Django 1.6.
