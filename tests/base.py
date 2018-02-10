@@ -2,7 +2,6 @@ import random
 from string import ascii_letters
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase  # noqa
 from django.utils.six.moves import range
 
 from tidings.models import Watch, WatchFilter

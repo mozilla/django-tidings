@@ -1,7 +1,9 @@
+from django.test import TestCase
+
 from tidings.models import Watch
 from tidings.utils import reverse
 
-from .base import watch, TestCase
+from .base import watch
 
 
 FAILURE_STRING = 'We could not find your subscription'

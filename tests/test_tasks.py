@@ -1,6 +1,8 @@
+from django.test import TestCase
+
 from tidings.models import Watch
 from tidings.tasks import claim_watches
-from .base import watch, TestCase, user
+from .base import watch, user
 
 
 class ClaimWatchesTests(TestCase):
