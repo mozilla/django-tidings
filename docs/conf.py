@@ -12,6 +12,7 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+from datetime import date
 import sys, os
 import django
 
@@ -45,7 +46,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-tidings'
-copyright = u'Mozilla'
+copyright = u'2011-%d, The Mozilla Foundation' % date.today().year
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
