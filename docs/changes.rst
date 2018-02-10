@@ -2,6 +2,7 @@ Version History
 ===============
 
 2.0 (To Be Released)
+  * Added support for Django 1.9, 1.10, 1.11, and 2.0.
   * Dropped support for Django 1.7 and South.
   * Dropped support for jingo_. Templates for the ``unsubscribe`` view are now
     standard Django templates.
@@ -26,7 +27,7 @@ Version History
   * Dropped mock, Fabric and django-nose dependencies.
   * Moved tests outside of app and simplified test setup.
   * Added Travis CI: https://travis-ci.org/mozilla/django-tidings
-  * Moved to ReadTheDocs: https://django-tidings.readthedocs.io/
+  * Moved to ReadTheDocs: https://django-tidings.readthedocs.io/en/latest/
 
 1.0 (2015-03-03)
   * Support Django 1.6.

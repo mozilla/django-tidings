@@ -1,7 +1,6 @@
-from django.conf.urls import include, patterns
+from django.conf.urls import include, url
 
 
-urlpatterns = patterns(
-    '',
-    (r'^', include('tidings.urls'))
+urlpatterns = (
+    url(r'^', include('tidings.urls')),
 )

@@ -2,13 +2,7 @@ import random
 from string import ascii_letters
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase  # noqa
 from django.utils.six.moves import range
-
-try:
-    from django.test import override_settings  # noqa
-except ImportError:
-    from django.test.utils import override_settings  # noqa
 
 from tidings.models import Watch, WatchFilter
 

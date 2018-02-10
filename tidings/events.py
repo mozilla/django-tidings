@@ -12,8 +12,9 @@ from django.utils.six.moves import range
 
 from celery.task import task
 
-from tidings.models import Watch, WatchFilter, EmailUser, multi_raw
-from tidings.utils import collate, hash_to_unsigned
+from .compat import is_authenticated
+from .models import Watch, WatchFilter, EmailUser, multi_raw
+from .utils import collate, hash_to_unsigned
 
 
 class ActivationRequestFailed(Exception):
@@ -69,8 +70,8 @@ def _unique_by_email(users_and_watches):
                        watches)
             favorite_user, watches = u, []
             cluster_email = row_email
-        elif ((not favorite_user.email or u.is_anonymous()) and
-              u.email and not u.is_anonymous()):
+        elif ((not favorite_user.email or not is_authenticated(u)) and
+              u.email and is_authenticated(u)):
             favorite_user = u
         watches.extend(w)
     if favorite_user is not None:
@@ -308,7 +309,7 @@ class Event(object):
 
         if isinstance(user_or_email, string_types):
             user_condition = Q(email=user_or_email)
-        elif not user_or_email.is_anonymous():
+        elif is_authenticated(user_or_email):
             user_condition = Q(user=user_or_email)
         else:
             return Watch.objects.none()

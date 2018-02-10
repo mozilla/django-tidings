@@ -14,7 +14,7 @@ installations. Its features include...
 * Optional confirmation of anonymous subscriptions
 * Hook points for customizing any page drawn and any email sent
 
-.. _celery: http://celeryproject.org/
+.. _celery: http://www.celeryproject.org/
 
 Contents
 ========

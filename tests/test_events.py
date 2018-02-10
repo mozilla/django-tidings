@@ -3,12 +3,13 @@ from django.contrib.auth.models import AnonymousUser
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.mail import EmailMessage
+from django.test import TestCase, override_settings
 from django.utils.six.moves import range
 
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
 
-from .base import watch, watch_filter, TestCase, user, override_settings
+from .base import watch, watch_filter, user
 from .mockapp.models import MockModel
 
 

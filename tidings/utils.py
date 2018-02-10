@@ -1,11 +1,13 @@
 from zlib import crc32
-from importlib import import_module
 
 from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template import Context, loader
+from django.utils.module_loading import import_string
 from django.utils.six import next, string_types
+
+from .compat import reverse as django_reverse
 
 
 def collate(*iterables, **kwargs):
@@ -105,39 +107,25 @@ def emails_with_users_and_watches(
                            **extra_kwargs)
 
 
-def _imported_symbol(import_path):
-    """Resolve a dotted path into a symbol, and return that.
-
-    For example...
-
-    >>> _imported_symbol('django.db.models.Model')
-    <class 'django.db.models.base.Model'>
-
-    Raise ImportError is there's no such module, AttributeError if no such
-    symbol.
-
-    """
-    module_name, symbol_name = import_path.rsplit('.', 1)
-    module = import_module(module_name)
-    return getattr(module, symbol_name)
-
-
 def import_from_setting(setting_name, fallback):
     """Return the resolution of an import path stored in a Django setting.
 
     :arg setting_name: The name of the setting holding the import path
-    :arg fallback: An import path to use if the given setting doesn't exist
+    :arg fallback: An alternate object to use if the setting is empty or
+      doesn't exist
 
     Raise ImproperlyConfigured if a path is given that can't be resolved.
 
     """
-    path = getattr(settings, setting_name, fallback)
-    try:
-        return _imported_symbol(path)
-    except (ImportError, AttributeError, ValueError):
-        raise ImproperlyConfigured('No such module or attribute: %s' % path)
+    path = getattr(settings, setting_name, None)
+    if path:
+        try:
+            return import_string(path)
+        except ImportError:
+            raise ImproperlyConfigured('%s: No such path.' % path)
+    else:
+        return fallback
 
 
 # Here to be imported by others:
-reverse = import_from_setting('TIDINGS_REVERSE',
-                              'django.core.urlresolvers.reverse')
+reverse = import_from_setting('TIDINGS_REVERSE', django_reverse)  # no QA

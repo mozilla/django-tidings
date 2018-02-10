@@ -1,6 +1,8 @@
+from django.test import TestCase
+
 from tidings.models import WatchFilter, EmailUser
 
-from .base import watch, watch_filter, TestCase
+from .base import watch, watch_filter
 
 
 # TODO: write a test to ensure that event types don't collide

@@ -1,22 +1,16 @@
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.contrib.contenttypes.fields import (GenericForeignKey,
+                                                GenericRelation)
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
 from django.utils.six import next, text_type
 
-try:
-    from django.contrib.contenttypes.fields import (GenericForeignKey,
-                                                    GenericRelation)
-except ImportError:
-    from django.contrib.contenttypes.generic import (GenericForeignKey,
-                                                     GenericRelation)
-
-from tidings.utils import import_from_setting, reverse
+from .utils import import_from_setting, reverse
 
 
-ModelBase = import_from_setting('TIDINGS_MODEL_BASE',
-                                'django.db.models.Model')
+ModelBase = import_from_setting('TIDINGS_MODEL_BASE', models.Model)
 
 
 def multi_raw(query, params, models, model_to_fields):
@@ -53,11 +47,13 @@ class Watch(ModelBase):
     event_type = models.CharField(max_length=30, db_index=True)
 
     #: Optional reference to a content type:
-    content_type = models.ForeignKey(ContentType, null=True, blank=True)
+    content_type = models.ForeignKey(ContentType, null=True, blank=True,
+                                     on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField(db_index=True, null=True)
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
+                             on_delete=models.CASCADE)
 
     #: Email stored only in the case of anonymous users:
     email = models.EmailField(db_index=True, null=True, blank=True)
@@ -96,7 +92,8 @@ class Watch(ModelBase):
 class WatchFilter(ModelBase):
     """Additional key/value pairs that pare down the scope of a watch"""
 
-    watch = models.ForeignKey(Watch, related_name='filters')
+    watch = models.ForeignKey(Watch, related_name='filters',
+                              on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
 
     #: Either an int or the hash of an item in a reasonably small set, which is
@@ -130,11 +127,12 @@ class NotificationsMixin(models.Model):
 
 
 class EmailUser(AnonymousUser):
-    """An anonymous user identified only by email address
+    """An anonymous user identified only by email address.
 
-    To test whether a returned user is an anonymous user, call
-    ``is_anonymous()``.
-
+    This is based on Django's AnonymousUser, so you can use the
+    ``is_authenticated`` property (Django 1.10 or later) or
+    ``is_authenticated`` method (Django 1.9 or earlier) to tell that
+    this is an anonymous user.
     """
     def __init__(self, email=''):
         self.email = email
