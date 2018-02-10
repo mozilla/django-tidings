@@ -58,15 +58,15 @@ sdist:
 	pyroma dist/`ls -t dist | grep tar.gz | head -n1`
 
 release: clean sdist
-	twine register dist/*.tar.gz
-	twine register dist/*.whl
+	gpg --detach-sign -a dist/*.tar.gz
+	gpg --detach-sign -a dist/*.whl
 	twine upload dist/*
 	python -m webbrowser -n https://pypi.python.org/pypi/django-tidings
 
 # Add [test] section to ~/.pypirc, https://testpypi.python.org/pypi
 test-release: clean sdist
-	twine register --repository test dist/*.tar.gz
-	twine register --repository test dist/*.whl
+	gpg --detach-sign -a dist/*.tar.gz
+	gpg --detach-sign -a dist/*.whl
 	twine upload --repository test dist/*
 	python -m webbrowser -n https://testpypi.python.org/pypi/django-tidings
 
