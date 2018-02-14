@@ -131,7 +131,8 @@ class Event(object):
         if delay:
             # Tasks don't receive the `self` arg implicitly.
             self._fire_task.apply_async(
-                kwargs={'self': self, 'exclude': exclude},
+                args=(self,),
+                kwargs={'exclude': exclude},
                 serializer='pickle')
         else:
             self._fire_task(self, exclude=exclude)

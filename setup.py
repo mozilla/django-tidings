@@ -31,7 +31,7 @@ def long_description():
 
 setup(
     name='django-tidings',
-    version='2.0',
+    version='2.0.1',
     description=description,
     long_description=long_description(),
     author='Erik Rose',
