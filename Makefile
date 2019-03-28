@@ -70,4 +70,4 @@ test-release: clean sdist
 	twine upload --repository test dist/*
 	python -m webbrowser -n https://testpypi.python.org/pypi/django-tidings
 
-.PHONY: help clean coverage coveragehtml develop lint qa qa-all release sdist test test-all test-release
+.PHONY: help clean coverage coveragehtml develop docs lint qa qa-all release sdist test test-all test-release
