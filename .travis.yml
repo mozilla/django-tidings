@@ -20,7 +20,6 @@ matrix:
   allow_failures:
     - env: TOXENV=py36-master
 install:
-  - pip install coveralls tox
+  - pip install tox
 script:
   - tox
-after_success: coveralls
