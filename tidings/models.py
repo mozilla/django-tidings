@@ -130,9 +130,7 @@ class EmailUser(AnonymousUser):
     """An anonymous user identified only by email address.
 
     This is based on Django's AnonymousUser, so you can use the
-    ``is_authenticated`` property (Django 1.10 or later) or
-    ``is_authenticated`` method (Django 1.9 or earlier) to tell that
-    this is an anonymous user.
+    ``is_authenticated`` property to tell that this is an anonymous user.
     """
     def __init__(self, email=''):
         self.email = email

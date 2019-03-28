@@ -4,10 +4,9 @@ from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.core.mail import EmailMessage
 from django.template import Context, loader
+from django.urls import reverse as django_reverse
 from django.utils.module_loading import import_string
 from django.utils.six import next, string_types
-
-from .compat import reverse as django_reverse
 
 
 def collate(*iterables, **kwargs):

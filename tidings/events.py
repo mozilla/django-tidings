@@ -12,7 +12,6 @@ from django.utils.six.moves import range
 
 from celery.task import task
 
-from .compat import is_authenticated
 from .models import Watch, WatchFilter, EmailUser, multi_raw
 from .utils import collate, hash_to_unsigned
 
@@ -70,8 +69,8 @@ def _unique_by_email(users_and_watches):
                        watches)
             favorite_user, watches = u, []
             cluster_email = row_email
-        elif ((not favorite_user.email or not is_authenticated(u)) and
-              u.email and is_authenticated(u)):
+        elif ((not favorite_user.email or not u.is_authenticated) and
+              u.email and u.is_authenticated):
             favorite_user = u
         watches.extend(w)
     if favorite_user is not None:
@@ -310,7 +309,7 @@ class Event(object):
 
         if isinstance(user_or_email, string_types):
             user_condition = Q(email=user_or_email)
-        elif is_authenticated(user_or_email):
+        elif user_or_email.is_authenticated:
             user_condition = Q(user=user_or_email)
         else:
             return Watch.objects.none()
