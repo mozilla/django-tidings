@@ -1,6 +1,6 @@
 # Testing and development requirements
 -r tests/requirements.txt
-Django<2.1
+Django<2.2
 check-manifest
 coverage
 flake8

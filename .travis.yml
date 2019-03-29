@@ -8,29 +8,20 @@ matrix:
     - python: "2.7"
       env: TOXENV=flake8
     - python: "2.7"
-      env: TOXENV=py27-1.8
-    - python: "3.5"
-      env: TOXENV=py35-1.8
-    - python: "2.7"
-      env: TOXENV=py27-1.9
-    - python: "3.5"
-      env: TOXENV=py35-1.9
-    - python: "2.7"
-      env: TOXENV=py27-1.10
-    - python: "3.5"
-      env: TOXENV=py35-1.10
-    - python: "2.7"
       env: TOXENV=py27-1.11
+    - python: "3.4"
+      env: TOXENV=py34-1.11
+    - python: "3.5"
+      env: TOXENV=py35-2.1
     - python: "3.6"
-      env: TOXENV=py36-1.11
-    - python: "3.6"
-      env: TOXENV=py36-2.0
-    - python: "3.6"
-      env: TOXENV=py36-master
+      env: TOXENV=py36-2.2
+      dist: xenial  # For SQLite 3.8.3 or later
+    - python: "3.7"
+      env: TOXENV=py37-master
+      dist: xenial  # For Python 3.7
   allow_failures:
-    - env: TOXENV=py36-master
+    - env: TOXENV=py37-master
 install:
-  - pip install coveralls tox
+  - pip install tox
 script:
   - tox
-after_success: coveralls

@@ -1,21 +1,28 @@
 """Compatibility functions for tidings."""
 
-# The standard Django reverse function
-# This is the default value if TIDINGS_REVERSE is not set
+# Python 2/3 compatibility for Django 1.11
 try:
-    # Django 1.10 and later
-    from django.urls import reverse
+    # Django 2.2 and earlier include six, but it is only
+    # needed for Python 2.7 under Django 1.11.
+    from django.utils.six import (iteritems, iterkeys, string_types, next,
+                                  text_type)
+    from django.utils.six.moves import range, reduce
 except ImportError:
-    # Django 1.9 and earlier
-    from django.core.urlresolvers import reverse
-assert reverse
+    # Django 3.0 drops the six library, but only runs under Python 3
+    # Copy Python 3 variants from https://github.com/benjaminp/six
 
+    from functools import reduce
+    assert reduce  # Make flake8 happier
 
-def is_authenticated(user):
-    """Is a user instance authenticated?"""
-    if callable(user.is_authenticated):
-        # Django 1.9 and earlier
-        return user.is_authenticated()
-    else:
-        # Django 1.10 and later
-        return user.is_authenticated
+    def iteritems(d, **kw):
+        return iter(d.items(**kw))
+
+    def iterkeys(d, **kw):
+        return iter(d.keys(**kw))
+
+    string_types = str,
+    text_type = str
+
+    # Asign built-ins to importable variables
+    next = next
+    range = range
