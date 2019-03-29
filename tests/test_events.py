@@ -42,6 +42,16 @@ class FilteredContentTypeEvent(ContentTypeEvent):
     filters = set(['color', 'flavor'])
 
 
+fire_simple_event_called = False
+
+
+class FireSimpleEvent(SimpleEvent):
+    def _mails(self, users_and_watches):
+        global fire_simple_event_called
+        fire_simple_event_called = True
+        return []
+
+
 class UsersWatchingTests(TestCase):
     """Unit tests for Event._users_watching_by_filter()"""
 
@@ -262,19 +272,13 @@ class EventUnionTests(TestCase):
 
     def test_fire(self):
         """Assert firing the union gets the mails from the first event."""
-
-        class FireSimpleEvent(SimpleEvent):
-            called = False
-
-            def _mails(self, users_and_watches):
-                self.called = True
-                return []
-
+        global fire_simple_event_called
         watch(event_type=TYPE, email='he@llo.com').save()
         simple_event = FireSimpleEvent()
+        fire_simple_event_called = False
         another_event = AnotherEvent()
         EventUnion(simple_event, another_event).fire()
-        self.assertTrue(simple_event.called)
+        self.assertTrue(fire_simple_event_called)
 
     def test_watch_lists(self):
         """Ensure the Union returns every watch a user has."""
