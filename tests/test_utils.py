@@ -1,7 +1,7 @@
 from django.core.exceptions import ImproperlyConfigured
 from django.test import override_settings, TestCase
-from django.utils.six.moves import range, reduce
 
+from tidings.compat import range, reduce
 from tidings.utils import collate, import_from_setting
 
 

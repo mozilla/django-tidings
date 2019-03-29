@@ -4,8 +4,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.core.mail import EmailMessage
 from django.test import TestCase, override_settings
-from django.utils.six.moves import range
 
+from tidings.compat import range
 from tidings.events import Event, _unique_by_email, EventUnion, InstanceEvent
 from tidings.models import Watch, EmailUser
 

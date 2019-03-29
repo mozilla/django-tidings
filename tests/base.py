@@ -2,8 +2,8 @@ import random
 from string import ascii_letters
 
 from django.contrib.auth import get_user_model
-from django.utils.six.moves import range
 
+from tidings.compat import range
 from tidings.models import Watch, WatchFilter
 
 

@@ -7,11 +7,10 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.models import ContentType
 from django.core import mail
 from django.db.models import Q
-from django.utils.six import iteritems, iterkeys, string_types
-from django.utils.six.moves import range
 
 from celery.task import task
 
+from .compat import iteritems, iterkeys, string_types, range
 from .models import Watch, WatchFilter, EmailUser, multi_raw
 from .utils import collate, hash_to_unsigned
 

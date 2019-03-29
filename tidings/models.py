@@ -5,8 +5,8 @@ from django.contrib.contenttypes.fields import (GenericForeignKey,
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.db import models, connections, router
-from django.utils.six import next, text_type
 
+from .compat import next, text_type
 from .utils import import_from_setting, reverse
 
 
