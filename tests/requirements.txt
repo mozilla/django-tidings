@@ -1,2 +1,2 @@
-# Requirements for Django 1.8
-celery==4.1.0
+# Latest versions of requirements
+celery
