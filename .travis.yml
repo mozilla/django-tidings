@@ -17,10 +17,13 @@ matrix:
       env: TOXENV=py36-2.2
       dist: xenial  # For SQLite 3.8.3 or later
     - python: "3.7"
-      env: TOXENV=py37-master
+      env: TOXENV=py37-3.0
       dist: xenial  # For Python 3.7
+    - python: "3.8"
+      env: TOXENV=py38-master
+      dist: xenial  # For Python 3.8
   allow_failures:
-    - env: TOXENV=py37-master
+    - env: TOXENV=py38-master
 install:
   - pip install tox
 script:
