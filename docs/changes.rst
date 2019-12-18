@@ -1,6 +1,12 @@
 Version History
 ===============
 
+Unreleased
+  * Drop support for Django 1.9, 1.10
+  * Add support for Django 2.1, 2.2, and 3.0
+  * Drop support for Python 3.4
+  * Add support for Python 3.7, 3.8
+
 2.0.1 (2018-02-14)
   * Fix a bug where asynchronously firing a task (the default) would
     raise an exception when run via Celery.
