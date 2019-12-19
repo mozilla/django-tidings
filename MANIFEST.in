@@ -1,5 +1,6 @@
 include LICENSE
 include README.rst
+include CODE_OF_CONDUCT.md
 include Makefile
 include requirements.dev.txt
 include tox.ini
