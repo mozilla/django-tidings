@@ -26,3 +26,10 @@ except ImportError:
     # Asign built-ins to importable variables
     next = next
     range = range
+
+# Python 3.3 deprecated importing ABCs from collections
+# Since we still support Python 2.7, we need this indirection
+try:
+    from collections.abc import Sequence  # noqa: F401
+except ImportError:
+    from collections import Sequence  # noqa: F401

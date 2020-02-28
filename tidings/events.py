@@ -1,4 +1,3 @@
-from collections import Sequence
 from smtplib import SMTPException
 import random
 
@@ -10,7 +9,7 @@ from django.db.models import Q
 
 from celery.task import task
 
-from .compat import iteritems, iterkeys, string_types, range
+from .compat import Sequence, iteritems, iterkeys, string_types, range
 from .models import Watch, WatchFilter, EmailUser, multi_raw
 from .utils import collate, hash_to_unsigned
 
