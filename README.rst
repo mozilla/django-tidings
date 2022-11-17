@@ -5,9 +5,6 @@ django-tidings
 .. image:: https://img.shields.io/pypi/v/django-tidings.svg
    :target: https://pypi.python.org/pypi/django-tidings
 
-.. image:: https://img.shields.io/travis/mozilla/django-tidings.svg
-   :target: http://travis-ci.org/mozilla/django-tidings
-
 .. image:: https://img.shields.io/coveralls/mozilla/django-tidings.svg
    :target: https://coveralls.io/github/mozilla/django-tidings
 
