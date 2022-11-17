@@ -1,2 +1,4 @@
-# Latest versions of requirements
-celery
+# Celery 5.x breaks the documentation build
+celery < 5.0.0
+# Suggested by https://stackoverflow.com/a/60349958/10612
+importlib-metadata>=1.5.0
