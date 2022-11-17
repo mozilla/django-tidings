@@ -2,6 +2,8 @@
 django-tidings
 ==============
 
+**This project is deprecated.** See `issue #52`_ for details.
+
 django-tidings is a framework for sending email notifications to users who have
 registered interest in certain events, such as the modification of some model
 object. Used by support.mozilla.org_ and developer.mozilla.org_, it is
@@ -60,6 +62,10 @@ Python 3 and Django 1.9 through 2.0. He added linting with flake8_, switched
 from jingo_ to Django templates, and switched from django_celery_ to basic
 Celery_.
 
+MDN_ stopped using the project in June 2021, and SUMO_ absorbed the code in
+June 2022. With no active projects using the code, John Whitlock deprecated
+the codebase in 2022.
+
 .. _`Erik Rose`: https://github.com/erikrose
 .. _`Paul Craciunoiu`: https://github.com/pcraciunoiu
 .. _`Ricky Rosario`: https://github.com/rlr
@@ -68,6 +74,7 @@ Celery_.
 .. _`Jannis Leidel`: https://github.com/jezdez
 .. _`John Whitlock`: https://github.com/jwhitlock
 .. _`support.mozilla.com team`: https://github.com/mozilla/kitsune
+.. _`issue #52`: https://github.com/mozilla/django-tidings/issues/52
 .. _tox: https://tox.readthedocs.io/en/latest/
 .. _South: http://south.aeracode.org/
 .. _Fabric: http://www.fabfile.org/
@@ -79,5 +86,7 @@ Celery_.
 .. _jingo: https://github.com/jbalogh/jingo
 .. _django_celery: https://github.com/celery/django-celery
 .. _Celery: http://www.celeryproject.org/
+.. _MDN: https://developer.mozilla.org/
+.. _SUMO: https://support.mozilla.org/
 
 .. Add your name if you commit something!
